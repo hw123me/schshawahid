@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة الشواهد المدرسية</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #1abc9c;
+      --bg-light: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--bg-light);
+      color: #333;
+    }
+
+    /* شريط التنقل العلوي */
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff !important;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 15px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.85rem;
+    }
+
+    /* الحاوية الرئيسية */
+    .main-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      margin-top: -30px;
+      background: #fff;
+      padding: 2rem;
+    }
+
+    /* تحسين الأزرار */
+    .btn-primary {
+      background-color: var(--accent-color);
+      border: none;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #16a085;
+      transform: translateY(-2px);
+    }
+
+    /* تأثيرات التحميل */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .spinner-grow {
+      color: var(--accent-color);
+    }
+
+    /* تذييل الصفحة */
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      color: #95a5a6;
+      font-size: 0.8rem;
+      padding-bottom: 20px;
+    }
+
+    .custom-navbar {
+    /* تدرج لوني احترافي */
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    padding: 0.8rem 0;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-brand .icon-box {
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .user-info-pill {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 15px;
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+  }
+
+  .btn-logout {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #ff9999;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 8px;
+    padding: 5px 12px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-logout:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+  }
+  .royal-navbar {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    padding: 0.7rem 0;
+    border-bottom: 2px solid #d4af37; /* خط ذهبي سفلي */
+  }
+
+  /* صندوق الأيقونة بلمسة ذهبية */
+  .royal-icon-box {
+    background: #d4af37; /* لون ذهبي */
+    color: #064e3b; /* أيقونة خضراء داخل الصندوق الذهبي */
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  /* نصوص العنوان */
+  .title-main {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+  }
+  .title-sub {
+    font-size: 0.7rem;
+    color: #d4af37; /* نص ذهبي صغير */
+    text-transform: uppercase;
+  }
+
+  /* كبسولة بيانات المستخدم */
+  .user-pill-royal {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3); /* إطار ذهبي شفاف */
+    color: #ffffff;
+  }
+  
+  .gold-text {
+    color: #d4af37;
+  }
+
+  /* زر الخروج الملكي */
+  .btn-royal-logout {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-royal-logout:hover {
+    background: #d4af37;
+    color: #064e3b;
+    border-color: #d4af37;
+    font-weight: bold;
+    transform: scale(1.05);
+  }
+  .royal-footer {
+    background: #043927; /* أخضر أغمق من الهيدر ليعطي ثباتاً */
+    color: #ffffff;
+    border-top: 3px solid #d4af37; /* الخط الذهبي الفاصل */
+    font-size: 0.9rem;
+  }
+
+  .copyright-text {
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* صندوق فريق العمل */
+  .credits-box {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .credit-item {
+    display: inline-block;
+  }
+
+  .credit-item strong {
+    color: #d4af37; /* الأسماء تظهر باللون الذهبي */
+    font-weight: 600;
+  }
+
+  .credit-divider {
+    margin: 0 10px;
+    color: rgba(212, 175, 55, 0.4);
+  }
+
+  .gold-text {
+    color: #d4af37;
+  }
+
+  /* تأكد من بقاء الفوتر في أسفل الصفحة */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  main { /* أو الـ div الرئيسي للمحتوى */
+    flex: 1;
+  }
+  </style>
+</head>
+
+<body>
+
+ <nav class="navbar navbar-expand-lg navbar-dark shadow mb-4 royal-navbar">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <div class="royal-icon-box me-2">
+         <i class="fas fa-award"></i> </div>
+      <div class="brand-text">
+        <span class="d-block fw-bold mb-0 title-main">إدارة الشواهد المدرسية</span>
+        <small class="title-sub">مجمع الإمام يعقوب البصري وأبو عمرو البصري  </small>
+      </div>
+    </a>
+    
+    <div class="d-flex align-items-center">
+      <div class="user-pill-royal d-none d-md-flex align-items-center me-3" id="userInfo">
+        <i class="fas fa-user-shield gold-text"></i>
+        <span class="ms-2 small">جاري التحقق...</span>
+      </div>
+      
+      <button onclick="logout()" class="btn btn-royal-logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="d-none d-sm-inline ms-1">تسجيل الخروج</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+  <div class="container pb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="main-card" id="content-area">
+          <div id="loader">
+            <div class="spinner-grow" role="status"></div>
+            <p class="mt-3 fw-bold text-muted">جاري تجهيز بيئة العمل...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="royal-footer mt-auto py-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+        <p class="mb-0 copyright-text">
+          <i class="far fa-copyright me-1"></i> 2026 جميع الحقوق محفوظة
+        </p>
+      </div>
+      
+      <div class="col-md-6 text-center text-md-end">
+        <div class="credits-box">
+          <span class="credit-item">
+            <i class="fas fa-lightbulb gold-text me-1"></i> فكرة: <strong>خالد المالكي</strong>
+          </span>
+          <span class="credit-divider">|</span>
+          <span class="credit-item">
+            <i class="fas fa-code gold-text me-1"></i> تطوير: <strong>عبدالرزاق المعلوي</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    window.showPage = function(userData) {
+    if (!userData) return;
+    
+    window.userDataForForm = userData; 
+
+    const infoDiv = document.getElementById('userInfo');
+    if(infoDiv) {
+        infoDiv.innerHTML = `
+            <i class="fas fa-user-circle me-1"></i> ${userData.name} 
+            <span class="badge bg-light text-dark ms-2">${userData.stage}</span>
+            <span class="badge bg-info ms-1">${userData.role}</span>
+        `;
+    }
+
+    let pageName = (userData.role === "مدير") ? 'ManagerView' : 
+                   (userData.role === "وكيل") ? 'AgentDashboard' : 'UserUpload';
+
+    google.script.run.withSuccessHandler(function(html) {
+        const contentArea = document.getElementById('content-area');
+        contentArea.innerHTML = html;
+
+        // --- إصلاح حقن السكريبتات (الطريقة المضمونة) ---
+        // نحول القائمة إلى مصفوفة ثابتة Array.from لنتجنب خطأ التغير الديناميكي أثناء التكرار
+        const scripts = Array.from(contentArea.getElementsByTagName("script"));
+        
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement("script");
+            // نقل المحتوى البرمجي
+            newScript.text = oldScript.text || oldScript.innerHTML;
+            
+            // نقل الخصائص (مثل النوع أو المصدر إن وجد)
+            Array.from(oldScript.attributes).forEach(attr => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            // الحقن في الرأس يضمن التنفيذ المستقل
+            document.head.appendChild(newScript);
+            
+            // إزالة السكريبت القديم من منطقة المحتوى لتنظيف الـ DOM
+            if (oldScript.parentNode) {
+                oldScript.parentNode.removeChild(oldScript);
+            }
+        });
+
+        // --- تنفيذ دوال التهيئة بعد الحقن ---
+        // تقليل وقت الانتظار لأن الطريقة أعلاه أسرع
+        setTimeout(function() {
+            if (pageName === 'AgentDashboard') {
+                if (typeof initializeAgentModule === 'function') {
+                    initializeAgentModule();
+                }
+            } 
+            else if (pageName === 'UserUpload') {
+                // جلب البيانات الأولية للمعلم (المجالات + الشواهد)
+                if (typeof google !== 'undefined') {
+                    google.script.run.withSuccessHandler(function(data) {
+                        // التأكد من أن السكريبت المحقون قد عرّف المتغيرات
+                        if (typeof allStandardsData !== 'undefined') {
+                            allStandardsData = data;
+                            if (typeof populateAreas === 'function') {
+                                populateAreas(window.userDataForForm);
+                            }
+                            if (typeof loadUserEvidences === 'function') {
+                                loadUserEvidences();
+                            }
+                        }
+                    }).getStandardsData();
+                }
+            }
+        }, 500); 
+
+    }).include(pageName);
+};
+
+function logout() {
+    // استخدام SweetAlert2 بدلاً من confirm التقليدية
+    Swal.fire({
+        title: 'تسجيل الخروج', // العنوان المخصص الذي طلبته
+        text: "هل أنت متأكد من رغبتك في مغادرة النظام؟",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#064e3b', // لون أخضر ملكي
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'نعم، تسجيل الخروج',
+        cancelButtonText: 'إلغاء',
+        reverseButtons: true // لجعل "نعم" على اليمين و "إلغاء" على اليسار (متوافق مع العربية)
+    }).then((result) => {
+        // إذا ضغط المستخدم على "نعم"
+        if (result.isConfirmed) {
+            executeLogoutProcess();
+        }
+    });
+}
+
+// دالة تنفيذ عملية الخروج الفعلية
+function executeLogoutProcess() {
+    // 1. مسح الجلسة فوراً
+    localStorage.removeItem('userSession');
+
+    // 2. تغيير محتوى الصفحة لإبلاغ المستخدم (لمنع النقرات المتعددة)
+    document.body.innerHTML = `
+        <div style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; flex-direction:column; background:#f8f9fa;">
+            <div style="border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+            <p style="margin-top:20px; color:#064e3b; font-weight:bold;">جاري العودة لصفحة الدخول...</p>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        </div>
+    `;
+
+    // 3. العودة لصفحة الدخول عبر رابط التطبيق الأساسي
+    google.script.run.withSuccessHandler(function(url) {
+        window.open(url, '_top'); 
+    }).getAppUrl();
+}
+</script>
+</body>
+
+</html>
