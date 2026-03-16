@@ -69,20 +69,17 @@
     <div class="container-fluid py-3">
       <div class="row justify-content-center">
         <div class="col-lg-10">
-          <div class="d-flex gap-2">
-            <button class="btn btn-success btn-sm" onclick="exportToExcel()">
-              <i class="fas fa-file-excel me-1"></i> Excel
+          <div class="d-flex gap-2 flex-wrap mb-3">
+            <button class="btn btn-success btn-sm px-3" onclick="exportToExcel()">
+                <i class="fas fa-file-excel me-1"></i> Excel
             </button>
-            <button class="btn btn-danger btn-sm" onclick="exportToPDF()">
-              <i class="fas fa-file-pdf me-1"></i> PDF
+            <button class="btn btn-danger btn-sm px-3" onclick="exportToPDF()">
+                <i class="fas fa-file-pdf me-1"></i> PDF
             </button>
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              onclick="loadManagerData()"
-            >
-              تحديث ↻
+            <button class="btn btn-outline-secondary btn-sm px-3" onclick="loadManagerData()">
+                تحديث ↻
             </button>
-          </div>
+        </div>
 
           <ul
             class="nav nav-pills mb-4 royal-tabs"
@@ -320,30 +317,22 @@
                   الشواهد
                 </button>
               </div>
-              <div
-                class="table-responsive shadow-sm bg-white rounded"
-                style="max-height: 450px; overflow-y: auto"
-              >
-                <table class="table table-hover align-middle mb-0">
-                  <thead class="royal-table-head sticky-top">
-                    <tr>
-                      <th>المرحلة</th>
-                      <th>المجال</th>
-                      <th>المؤشر</th>
-                      <th>بواسطة</th>
-                      <th>التاريخ</th>
-                      <th>الإجراء</th>
-                    </tr>
-                  </thead>
-                  <tbody id="managerTableBody">
-                    <tr>
-                      <td colspan="6" class="text-center py-5">
-                        جاري جلب الشواهد...
-                      </td>
-                    </tr>
-                  </tbody>
+              <div class="table-responsive shadow-sm bg-white rounded">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+                    <thead class="royal-table-head sticky-top">
+                        <tr>
+                            <th>المرحلة</th>
+                            <th class="d-none d-md-table-cell">المجال</th>
+                            <th>المؤشر</th>
+                            <th class="d-none d-sm-table-cell">بواسطة</th>
+                            <th>التاريخ</th>
+                            <th>الإجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="managerTableBody">
+                        </tbody>
                 </table>
-              </div>
+            </div>
             </div>
 
             <div class="tab-pane fade" id="users-content" role="tabpanel">

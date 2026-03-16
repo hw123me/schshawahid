@@ -1,22 +1,24 @@
   
-    :root {
-      --primary-color: #2c3e50;
-      --secondary-color: #34495e;
-      --accent-color: #1abc9c;
-      --bg-light: #f4f7f6;
-    }
+   :root {
+  --primary-green: #064e3b;
+  --secondary-green: #065f46;
+  --royal-gold: #d4af37;
+  --bg-light: #f4f7f6;
+  --text-dark: #333;
+}
     html, body {
       height: 100%;
     }
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background-color: var(--bg-light);
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh; /* يضمن أن الارتفاع لا يقل عن طول الشاشة */
-      margin: 0;
-    }
+  body {
+  font-family: 'Tajawal', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  direction: rtl; /* أضفتها لدعم المحتوى العربي */
+}
 
     /* شريط التنقل العلوي */
     .navbar {
@@ -41,13 +43,13 @@
 
     /* الحاوية الرئيسية */
     .main-card {
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      margin-top: -30px;
-      background: #fff;
-      padding: 2rem;
-    }
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  padding: 2rem;
+  transition: transform 0.3s ease;
+}
 
     /* تحسين الأزرار */
     .btn-primary {
@@ -130,24 +132,23 @@
     box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
   }
   .royal-navbar {
-    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-    padding: 0.7rem 0;
-    border-bottom: 2px solid #d4af37; /* خط ذهبي سفلي */
-  }
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  padding: 0.7rem 0;
+  border-bottom: 2px solid var(--royal-gold);
+}
 
   /* صندوق الأيقونة بلمسة ذهبية */
   .royal-icon-box {
-    background: #d4af37; /* لون ذهبي */
-    color: #064e3b; /* أيقونة خضراء داخل الصندوق الذهبي */
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 1.3rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
+  background: var(--royal-gold);
+  color: var(--primary-green);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 
   /* نصوص العنوان */
   .title-main {
@@ -249,31 +250,28 @@ main, .flex-grow-content {
     font-weight: 600;
   }
   .btn-royal-save {
-    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
-    color: #d4af37 !important; /* نص ذهبي */
-    border: 1px solid #d4af37 !important;
-    padding: 10px 25px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%) !important;
+  color: var(--royal-gold) !important;
+  border: 1px solid var(--royal-gold) !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 
-  .btn-royal-save:hover {
-    background: #065f46 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(6, 78, 59, 0.3);
-    color: #ffffff !important; /* يتحول للأبيض عند الحوم */
-  }
+ .btn-royal-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(6, 78, 59, 0.3);
+  color: #ffffff !important;
+}
    /* تنسيق شريط التمرير */
   .table-responsive::-webkit-scrollbar {
-    width: 6px;
-  }
+  width: 6px;
+  height: 6px;
+}
 
   .table-responsive::-webkit-scrollbar-thumb {
-    background-color: #adb5bd;
-    border-radius: 10px;
-  }
+  background-color: #adb5bd;
+  border-radius: 10px;
+}
 
   .table-responsive::-webkit-scrollbar-track {
     background: #f1f1f1;
@@ -281,14 +279,13 @@ main, .flex-grow-content {
 
   /* الهيدر الملكي المثبت */
   .royal-table-head th {
-    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
-    color: #d4af37 !important;
-    font-weight: 600;
-    text-align: center;
-    border-bottom: 2px solid #d4af37 !important;
-    padding: 15px !important;
-    white-space: nowrap;
-  }
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%) !important;
+  color: var(--royal-gold) !important;
+  border-bottom: 2px solid var(--royal-gold) !important;
+  text-align: center;
+  padding: 15px !important;
+  white-space: nowrap;
+}
 
   .table-hover tbody tr:hover {
     background-color: rgba(6, 78, 59, 0.05);
@@ -379,11 +376,12 @@ main, .flex-grow-content {
   }
 
   /* الخلفية الملكية المتدرجة */
-  .royal-card-bg {
-    background: linear-gradient(135deg, #a5b066 0%, #859147 50%, #97ad05 100%) !important;
-    position: relative;
-    overflow: hidden;
-  }
+ .royal-card-bg {
+  background: linear-gradient(135deg, #a5b066 0%, #859147 50%, #97ad05 100%) !important;
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid var(--royal-gold) !important;
+}
 
   /* إضافة تأثير "الوهج" الخفيف على البطاقة */
   .royal-card-bg::after {
@@ -469,25 +467,9 @@ main, .flex-grow-content {
     border-radius: 10px 0 0 10px !important;
   }
 
-  .btn-royal-save {
-    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
-    color: #d4af37 !important;
-    /* نص ذهبي */
-    border: 1px solid #d4af37 !important;
-    padding: 10px 25px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+ 
 
-  .btn-royal-save:hover {
-    background: #065f46 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(6, 78, 59, 0.3);
-    color: #ffffff !important;
-    /* يتحول للأبيض عند الحوم */
-  }
+  
 
   /* الزر الثانوي (إلغاء / مسح) - ذهبي ملكي */
   .btn-royal-cancel {
@@ -524,23 +506,16 @@ main, .flex-grow-content {
   }
 
   .loading-row td {
-    height: 50px;
-    background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
-    background-size: 200% 100%;
-    animation: royal-loading 1.5s infinite;
-    border-radius: 8px;
-    border: none;
-  }
+  height: 50px;
+  background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+  background-size: 200% 100%;
+  animation: royal-loading 1.5s infinite;
+}
 
-  @keyframes royal-loading {
-    0% {
-      background-position: 200% 0;
-    }
-
-    100% {
-      background-position: -200% 0;
-    }
-  }
+ @keyframes royal-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
   .sticky-top {
     top: 0;
@@ -588,14 +563,8 @@ main, .flex-grow-content {
     transition: all 0.5s ease;
 }
   
-/* تحسين شكل شريط التمرير للجدول */
-.table-responsive::-webkit-scrollbar {
-  width: 6px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: #e0e0e0;
-  border-radius: 10px;
-}
+
+
 
 /* تأثير عند التمرير على صفوف الجدول */
 #registeredUsersBody tr:hover {
