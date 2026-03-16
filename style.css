@@ -613,3 +613,33 @@ main, .flex-grow-content {
 .gold-text {
     color: #d4af37 !important;
 }
+
+@media (max-width: 576px) {
+    .royal-navbar .container {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .brand-text .title-main {
+        font-size: 0.85rem !important; /* تصغير اسم الإدارة قليلاً */
+    }
+
+    .brand-text .title-sub {
+        display: none; /* إخفاء اسم المجمع الطويل في الجوال لتوفير مساحة للاسم */
+    }
+
+    .user-pill-royal {
+        padding: 4px 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+    }
+
+    .user-name-text {
+        max-width: 60px; /* تحديد عرض الاسم */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
