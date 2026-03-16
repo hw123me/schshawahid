@@ -599,3 +599,17 @@ main, .flex-grow-content {
 .sticky-top {
     box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
+.user-pill-royal {
+    transition: all 0.3s ease;
+    padding: 5px 12px;
+    border-radius: 50px;
+}
+
+.user-pill-royal:hover {
+    background: rgba(212, 175, 55, 0.1); /* توهج ذهبي خفيف */
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.gold-text {
+    color: #d4af37 !important;
+}
