@@ -1,0 +1,2255 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إدارة الشواهد المدرسية</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://lh3.googleusercontent.com/u/0/d/1MHJi0LeO90YSWA5ZPZ0dca5Tiw1WCcAw"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/MrRio/jsPDF/dist/jspdf.customfonts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow mb-4 royal-navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <div class="royal-icon-box me-2">
+            <i class="fas fa-award"></i>
+          </div>
+          <div class="brand-text">
+            <span class="d-block fw-bold mb-0 title-main"
+              >إدارة الشواهد المدرسية</span
+            >
+            <small class="title-sub"
+              >مجمع الإمام يعقوب البصري وأبو عمرو البصري
+            </small>
+          </div>
+        </a>
+
+        <div class="d-flex align-items-center">
+          <div
+            class="user-pill-royal d-none d-md-flex align-items-center me-3"
+            id="userInfo"
+          >
+            <i class="fas fa-user-shield gold-text"></i>
+            <span class="ms-2 small">جاري التحقق...</span>
+          </div>
+
+          <button onclick="logout()" class="btn btn-royal-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="d-none d-sm-inline ms-1">تسجيل الخروج</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid py-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="d-flex gap-2">
+            <button class="btn btn-success btn-sm" onclick="exportToExcel()">
+              <i class="fas fa-file-excel me-1"></i> Excel
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="exportToPDF()">
+              <i class="fas fa-file-pdf me-1"></i> PDF
+            </button>
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              onclick="loadManagerData()"
+            >
+              تحديث ↻
+            </button>
+          </div>
+
+          <ul
+            class="nav nav-pills mb-4 royal-tabs"
+            id="adminTabs"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <button
+                class="nav-link active fw-bold"
+                id="evidences-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#evidences-content"
+                type="button"
+              >
+                <i class="fas fa-file-signature me-1"></i> استعراض الشواهد
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link fw-bold"
+                id="users-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#users-content"
+                type="button"
+                onclick="loadRegisteredUsers()"
+              >
+                <i class="fas fa-users-cog me-1"></i> إدارة المعلمين
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                class="nav-link"
+                id="upload-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#upload"
+                type="button"
+              >
+                <i class="fas fa-cloud-upload-alt me-2"></i>رفع الشواهد
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div
+              class="tab-pane fade show active"
+              id="evidences-content"
+              role="tabpanel"
+            >
+              <div class="row mb-3">
+                <div class="col-12">
+                  <div
+                    class="alert shadow-sm d-flex align-items-center bg-white border-gold"
+                    style="border-radius: 15px; padding: 10px 20px"
+                  >
+                    <div class="flex-shrink-0">
+                      <span
+                        class="badge rounded-pill bg-success p-2 animate-pulse"
+                      >
+                        <i class="fas fa-bell text-white"></i>
+                      </span>
+                    </div>
+                    <div class="ms-3 flex-grow-1">
+                      <small
+                        class="text-muted d-block"
+                        style="font-size: 0.7rem"
+                        >آخر نشاط في النظام:</small
+                      >
+                      <span
+                        id="latestActivity"
+                        class="fw-bold text-dark"
+                        style="font-size: 0.9rem"
+                        >جاري جلب آخر التحديثات...</span
+                      >
+                    </div>
+                    <div class="ms-auto">
+                      <span
+                        id="lastActivityTime"
+                        class="badge bg-light text-muted border"
+                        >--:--</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-lg-8">
+                  <div class="row text-center g-3">
+                    <div class="col-md-4">
+                      <div
+                        class="card shadow-sm royal-card-bg border-gold text-white h-100"
+                      >
+                        <div
+                          class="card-body d-flex flex-column justify-content-center"
+                        >
+                          <h6>إجمالي الشواهد</h6>
+                          <h2 id="totalCount" class="mb-0">0</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div
+                        class="card shadow-sm bg-success text-white border-0 h-100"
+                      >
+                        <div
+                          class="card-body d-flex flex-column justify-content-center"
+                        >
+                          <h6>شواهد الابتدائي</h6>
+                          <h2 id="primaryCount" class="mb-0">0</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div
+                        class="card shadow-sm bg-warning text-dark border-0 h-100"
+                      >
+                        <div
+                          class="card-body d-flex flex-column justify-content-center"
+                        >
+                          <h6>شواهد المتوسط</h6>
+                          <h2 id="middleCount" class="mb-0">0</h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="card shadow-sm bg-white border-0 h-100">
+                    <div
+                      class="card-body p-2"
+                      style="position: relative; min-height: 150px"
+                    >
+                      <canvas id="evidencesChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-4 text-center">
+                <div class="col-md-6 mt-3">
+                  <div class="card shadow-sm border-royal bg-white">
+                    <div class="card-body">
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
+                        <div class="icon-circle bg-light-gold me-3">
+                          <i class="fas fa-trophy text-gold"></i>
+                        </div>
+                        <div>
+                          <h6 class="text-muted mb-0">المعلم الأكثر رفعاً</h6>
+                          <h5 id="topTeacher" class="fw-bold text-dark mt-1">
+                            -
+                          </h5>
+                          <small
+                            id="topTeacherCount"
+                            class="badge rounded-pill bg-light text-success border"
+                            >0 شاهد</small
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mt-3">
+                  <div class="card shadow-sm border-royal bg-white">
+                    <div class="card-body">
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
+                        <div class="icon-circle bg-light-green me-3">
+                          <i class="fas fa-chart-pie text-success"></i>
+                        </div>
+                        <div>
+                          <h6 class="text-muted mb-0">المجال الأكثر تغطية</h6>
+                          <h5 id="topArea" class="fw-bold text-dark mt-1">-</h5>
+                          <small
+                            id="topAreaCount"
+                            class="badge rounded-pill bg-light text-primary border"
+                            >0 شاهد</small
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card mb-4 border-0 shadow-sm bg-light">
+                <div class="card-body">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-md-8">
+                      <div class="input-group">
+                        <span
+                          class="input-group-text bg-white border-royal text-gold"
+                        >
+                          <i class="fas fa-search"></i>
+                        </span>
+                        <input
+                          type="text"
+                          id="filterSearch"
+                          class="form-control border-royal"
+                          placeholder="ابحث بأي شيء (اسم المعلم، كود المؤشر، المجال، أو المرحلة)..."
+                          onkeyup="applySmartFilter()"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <select
+                        class="form-select border-royal"
+                        id="filterArea"
+                        onchange="applySmartFilter()"
+                      >
+                        <option value="all">كل المجالات</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div
+                    id="searchCount"
+                    class="small text-muted mt-2 ps-2 fw-bold"
+                    style="min-height: 20px"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end mb-2">
+                <button
+                  class="btn btn-sm btn-outline-danger border-0 fw-bold"
+                  onclick="deleteAllEvidences()"
+                  id="deleteAllBtn"
+                >
+                  <i class="fas fa-exclamation-triangle me-1"></i> حذف جميع
+                  الشواهد
+                </button>
+              </div>
+              <div
+                class="table-responsive shadow-sm bg-white rounded"
+                style="max-height: 450px; overflow-y: auto"
+              >
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="royal-table-head sticky-top">
+                    <tr>
+                      <th>المرحلة</th>
+                      <th>المجال</th>
+                      <th>المؤشر</th>
+                      <th>بواسطة</th>
+                      <th>التاريخ</th>
+                      <th>الإجراء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="managerTableBody">
+                    <tr>
+                      <td colspan="6" class="text-center py-5">
+                        جاري جلب الشواهد...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="users-content" role="tabpanel">
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="card border-0 shadow-sm p-3 border-royal">
+                    <h5 class="fw-bold border-bottom pb-2 mb-3 text-success">
+                      <i class="fas fa-user-plus me-1"></i> إضافة معلم
+                    </h5>
+
+                    <div class="mb-2">
+                      <label class="small fw-bold mb-1">اسم المعلم:</label>
+                      <input
+                        type="text"
+                        id="newUserName"
+                        class="form-control"
+                        placeholder="الاسم الكامل"
+                      />
+                    </div>
+
+                    <div class="mb-2">
+                      <label class="small fw-bold mb-1 text-royal-gold"
+                        >البريد الإلكتروني:</label
+                      >
+                      <input
+                        type="email"
+                        id="newUserEmail"
+                        class="form-control border-royal"
+                        placeholder="example@email.com"
+                      />
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="small fw-bold mb-1 text-royal-gold"
+                        >كلمة المرور:</label
+                      >
+                      <div class="input-group">
+                        <input
+                          type="password"
+                          id="newUserPassword"
+                          class="form-control border-royal"
+                          placeholder="أدخل كلمة المرور"
+                        />
+                        <button
+                          class="btn btn-outline-gold"
+                          type="button"
+                          onclick="
+                            togglePasswordVisibility(this, 'newUserPassword')
+                          "
+                        >
+                          <i class="fas fa-eye" id="toggleIcon"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <label class="small fw-bold mb-1 text-royal-gold"
+                        >تحديد المرحلة:</label
+                      >
+                      <select id="newUserStage" class="form-select">
+                        <option value="ابتدائي">ابتدائي</option>
+                        <option value="متوسط">متوسط</option>
+                      </select>
+                    </div>
+                    <div class="mb-2">
+                      <label class="small fw-bold mb-1 text-royal-gold"
+                        >تحديد الدور:</label
+                      >
+                      <select id="newRole" class="form-select">
+                        <option value="معلم">معلم</option>
+                        <option value="وكيل">وكيل</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="small fw-bold mb-1 text-royal-gold"
+                        >المجالات المتاحة:</label
+                      >
+                      <select
+                        id="allowedAreas"
+                        class="form-select"
+                        multiple
+                        style="height: 120px; font-size: 0.9rem"
+                      ></select>
+                      <small class="text-muted" style="font-size: 0.7rem"
+                        >* استخدم Ctrl للاختيار المتعدد</small
+                      >
+                    </div>
+
+                    <button
+                      onclick="addNewUserAccount()"
+                      id="addUserBtn"
+                      class="btn btn-royal-view w-100"
+                    >
+                      <i class="fas fa-save me-1"></i> حفظ المعلم
+                    </button>
+                  </div>
+                </div>
+
+                <div class="col-md-8">
+                  <div
+                    class="table-responsive shadow-sm bg-white rounded border"
+                    style="max-height: 500px; overflow-y: auto"
+                  >
+                    <table class="table table-hover align-middle mb-0">
+                      <thead class="bg-light sticky-top">
+                        <tr>
+                          <th class="p-3" style="width: 30%">المعلم</th>
+                          <th style="width: 50%">المجالات المسندة</th>
+                          <th class="text-center" style="width: 20%">
+                            الإجراء
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="registeredUsersBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="upload" role="tabpanel">
+              <div class="card shadow-sm mt-3 border-0">
+                <div class="card-body">
+                  <form id="agentQuickUpload">
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">المجال</label>
+                        <select
+                          class="form-select"
+                          id="a_area"
+                          onchange="loadAgentStandards()"
+                          required
+                        >
+                          <option value="">اختر المجال...</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">المعيار</label>
+                        <select
+                          class="form-select"
+                          id="a_standard"
+                          onchange="loadAgentIndicators()"
+                          required
+                          disabled
+                        >
+                          <option value="">اختر المعيار...</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">المؤشر</label>
+                        <select
+                          class="form-select"
+                          id="a_indicator"
+                          onchange="displayIndicatorDetails()"
+                          required
+                          disabled
+                        >
+                          <option value="">اختر المؤشر...</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="bg-light p-3 rounded mb-3 border">
+                      <div class="small text-muted">
+                        الرمز :
+                        <span id="a_codeDisplay" class="fw-bold text-dark"
+                          >-</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mb-2">
+                      <label class="small fw-bold mb-3 text-royal-gold"
+                        >تحديد المرحلة:</label
+                      >
+                      <select id="sStage" class="form-select">
+                        <option value="ابتدائي">ابتدائي</option>
+                        <option value="متوسط">متوسط</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <input
+                        type="file"
+                        id="a_file"
+                        class="form-control"
+                        accept=".pdf, .jpg, .jpeg, .png, .doc, .docx, .xls, .xlsx, .mp4, .mov, .webm"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      id="a_uploadBtn"
+                      class="btn btn-royal-save"
+                    >
+                      بدء رفع الشاهد للمؤشر المختار
+                    </button>
+                  </form>
+                  <div id="a_msg" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="card mt-4 border-0 shadow-sm"
+            style="
+              border-radius: 15px;
+              background: #fdfdfd;
+              border: 1px solid #eee !important;
+            "
+          >
+            <div class="card-body p-3">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <div>
+                  <span class="fw-bold text-dark" style="font-size: 0.85rem">
+                    <i class="fas fa-cloud-upload-alt text-royal me-1"></i>
+                    إجمالي استهلاك الوسائط
+                  </span>
+                  <div class="text-muted" style="font-size: 0.65rem">
+                    (يشمل مجلد الفيديوهات ومجلد الصور)
+                  </div>
+                </div>
+                <span id="storageText" class="badge bg-light text-dark border"
+                  >جاري الحساب...</span
+                >
+              </div>
+
+              <div
+                class="progress"
+                style="
+                  height: 10px;
+                  border-radius: 20px;
+                  background-color: #f0f0f0;
+                "
+              >
+                <div
+                  id="storageBar"
+                  class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                  role="progressbar"
+                  style="width: 0%"
+                ></div>
+              </div>
+
+              <div class="d-flex justify-content-between mt-2">
+                <small id="storagePercent" class="fw-bold text-success"
+                  >0%</small
+                >
+                <small class="text-muted" style="font-size: 0.7rem"
+                  >السعة المتوفرة: 15 GB</small
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal fade"
+            id="editUserModal"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header royal-navbar text-white">
+                  <h5 class="modal-title">
+                    <i class="fas fa-user-edit me-2"></i>تعديل بيانات المعلم
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" id="editRowId" />
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-royal-gold"
+                      >الاسم الكامل</label
+                    >
+                    <input
+                      type="text"
+                      id="editName"
+                      class="form-control border-royal"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-royal-gold"
+                      >البريد الإلكتروني</label
+                    >
+                    <input
+                      type="email"
+                      id="editEmail"
+                      class="form-control border-royal"
+                    />
+                    <small
+                      id="emailError"
+                      class="text-danger"
+                      style="display: none"
+                      >هذا البريد مستخدم مسبقاً!</small
+                    >
+                  </div>
+                  <div class="mb-3">
+                    <label class="small fw-bold text-royal-gold"
+                      >كلمة المرور:</label
+                    >
+                    <div class="input-group">
+                      <input
+                        type="password"
+                        id="editPassword"
+                        class="form-control border-royal"
+                        placeholder="اتركه فارغاً إذا لا ترغب بالتغيير"
+                      />
+                      <button
+                        class="btn btn-outline-gold"
+                        type="button"
+                        onclick="togglePasswordVisibility(this, 'editPassword')"
+                      >
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-royal-gold"
+                      >المرحلة الدراسية</label
+                    >
+                    <select id="editStage" class="form-select border-royal">
+                      <option value="ابتدائي">ابتدائي</option>
+                      <option value="متوسط">متوسط</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-royal-gold"
+                      >الدور</label
+                    >
+                    <select id="editRole" class="form-select border-royal">
+                      <option value="معلم">معلم</option>
+                      <option value="وكيل">وكيل</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold text-royal-gold"
+                      >المجالات المسموحة</label
+                    >
+                    <select
+                      id="editAllowedAreas"
+                      class="form-select border-royal"
+                      multiple
+                      style="height: 150px"
+                    >
+                      <option disabled>جاري تحميل المجالات...</option>
+                    </select>
+                    <small class="text-muted d-block mt-1"
+                      >استخدم Ctrl لاختيار أكثر من مجال</small
+                    >
+                  </div>
+                </div>
+                <div class="modal-footer bg-light">
+                  <button
+                    type="button"
+                    class="btn btn-royal-cancel"
+                    data-bs-dismiss="modal"
+                  >
+                    إلغاء
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-royal-save"
+                    onclick="saveUserUpdate(this)"
+                  >
+                    حفظ التعديلات
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="royal-footer mt-auto py-4">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            <p class="mb-0 copyright-text">
+              <i class="far fa-copyright me-1"></i> 2026 جميع الحقوق محفوظة
+            </p>
+          </div>
+
+          <div class="col-md-6 text-center text-md-end">
+            <div class="credits-box">
+              <span class="credit-item">
+                <i class="fas fa-lightbulb gold-text me-1"></i> فكرة:
+                <strong>خالد المالكي</strong>
+              </span>
+              <span class="credit-divider">|</span>
+              <span class="credit-item">
+                <i class="fas fa-code gold-text me-1"></i> تطوير:
+                <strong>عبدالرزاق المعلوي</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbz7DC8xWvRnkc8E_200SUw_2C_c-2lovZ7CKNiWq5kB408PLPmLlJQu9RqybuYYbvz9/exec";
+     var savedUser = JSON.parse(localStorage.getItem("loggedUser"));
+      let rawData = [];
+      window.standardsData = [];
+
+      // وظيفة التشغيل الفوري (كما في نسختك القديمة)
+      function initLoad() {
+        
+        const stage = savedUser ? savedUser.stage : "";
+        const role = savedUser ? savedUser.role : "";
+        const name = savedUser ? savedUser.name : "ضيف";
+
+        const infoDiv = document.getElementById("userInfo");
+        if (infoDiv) {
+          infoDiv.innerHTML = `
+                <i class="fas fa-user-circle me-1"></i> ${name} 
+               
+                <span class="badge bg-info ms-1">${role}</span>
+            `;
+        }
+        loadManagerData();
+        loadStandardsAndAreas();
+        updateStorageUI();
+      }
+
+      async function loadManagerData() {
+        // 1. تعريف العناصر الأساسية (تأكد من وجود حاوية للجدول أو مؤشر تحميل)
+        // سنفترض هنا أننا سنظهر التحميل في مكان ما أو نكتفي بالكونسول كما في كودك السابق
+        console.log("جاري طلب بيانات الإدارة...");
+
+        try {
+          // 2. إرسال الطلب باستخدام fetch بنفس أسلوب loadStaffStats
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "getEvidencesData" }),
+          });
+
+          // 3. تحويل الاستجابة إلى JSON
+          const result = await response.json();
+
+          // 4. التحقق من نجاح العملية ووجود البيانات
+          if (result && result.status === "success") {
+            const data = result.data; // المصفوفة القادمة من الباك إند
+            console.log("وصلت البيانات، العدد:", data.length);
+
+            // تخزين البيانات عالمياً للفلترة
+            rawData = data;
+
+            // 5. تنفيذ العمليات الحسابية وتحديث الواجهات
+            renderTable(data);
+            updateStats(data);
+            populateAreaFilter(data);
+            updateLatestActivity(data);
+            updateStorageUI();
+
+            // 6. تحديث الرسم البياني بالأرقام المحسوبة
+            // نستخدم setTimeout بسيط لضمان أن DOM قد تم تحديثه بواسطة updateStats
+            setTimeout(() => {
+              const pCount =
+                parseInt(document.getElementById("primaryCount")?.innerText) ||
+                0;
+              const mCount =
+                parseInt(document.getElementById("middleCount")?.innerText) ||
+                0;
+              const tCount =
+                parseInt(document.getElementById("totalCount")?.innerText) || 0;
+
+              // استدعاء دالة الرسم (تأكد من وجودها)
+              if (typeof updateDashboardChart === "function") {
+                updateDashboardChart(pCount, mCount);
+              }
+            }, 100);
+          } else {
+            throw new Error(result.message || "فشل في استرجاع البيانات");
+          }
+        } catch (error) {
+          console.error("Manager Data Error:", error);
+          // يمكنك إظهار رسالة خطأ في واجهة المستخدم هنا
+          if (document.getElementById("tableContainer")) {
+            document.getElementById("tableContainer").innerHTML =
+              '<div class="alert alert-danger text-center">❌ خطأ في تحميل البيانات الأساسية</div>';
+          }
+        }
+      }
+      function updateLatestActivity(data) {
+        if (data && data.length > 0) {
+          // بما أن البيانات عادة ما تأتي مرتبة من الأحدث للأقدم أو العكس
+          // لنفترض أن آخر عنصر في المصفوفة (أو أول عنصر حسب ترتيب شيت جوجل) هو الأحدث
+          const latest = data[0];
+
+          const activityText = `قام المعلم (${latest.userName}) برفع شاهد جديد في مجال: ${latest.area}`;
+          document.getElementById("latestActivity").innerText = activityText;
+          document.getElementById("lastActivityTime").innerText =
+            latest.date || "اليوم";
+        } else {
+          document.getElementById("latestActivity").innerText =
+            "لا توجد أنشطة سابقة مسجلة.";
+        }
+      }
+
+      function renderTable(data) {
+        const tbody = document.getElementById("managerTableBody");
+        if (!tbody) return;
+        if (data.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" class="text-center py-4">لا توجد بيانات</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data
+          .map(
+            (row) => `
+            <tr>
+              <td><span class="badge ${row.stage === "ابتدائي" ? "bg-success" : "bg-warning text-dark"}">${row.stage}</span></td>
+              <td class="small text-dark-50">${row.area}</td>
+              <td>
+                <div class="d-flex flex-column align-items-start">
+                  <span class="fw-bold text-gold" style="font-size: 1rem;">
+                    ${row.code}
+                  </span>
+                  
+                  <span class="text-muted" style="font-size: 0.75rem; line-height: 1.2;">
+                    ${row.indicator}
+                  </span>
+                </div>
+              </td>
+              <td class="text-dark">${row.userName}</td> 
+              <td class="text-muted small">${row.date}</td> 
+              <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                      <a href="${row.fileUrl}" target="_blank" class="btn-glass-view" title="عرض الملف">
+                          <i class="fas fa-eye"></i>
+                      </a>
+                      <button onclick="deleteEvidence('${row.rowId}', '${row.userName}', this)" 
+                              class="btn-delete-royal" 
+                              title="حذف الشاهد">
+                          <i class="fas fa-trash-alt"></i>
+                      </button>
+                  </div>
+              </td> 
+          </tr>
+        `,
+          )
+          .join("");
+      }
+      // وظائف إدارة المعلمين
+      async function loadRegisteredUsers() {
+        const tbody = document.getElementById("registeredUsersBody");
+        if (!tbody) return;
+
+        // --- المرحلة الأولى: إظهار تأثير التحميل (Skeleton Loader) ---
+        tbody.innerHTML = `
+        <tr class="loading-row"><td colspan="3" class="py-4"></td></tr>
+        <tr class="loading-row"><td colspan="3" class="py-4"></td></tr>
+        <tr class="loading-row"><td colspan="3" class="py-4"></td></tr>
+    `;
+
+        try {
+          // --- المرحلة الثانية: طلب البيانات من السيرفر بأسلوب Fetch ---
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "getUsersByStage",
+              stage: "الكل", // أو يمكنك تمرير متغير هنا حسب اختيارك
+              role: savedUser.role
+            }),
+          });
+
+          const result = await response.json();
+
+          // التحقق من نجاح العملية واستخراج مصفوفة المستخدمين
+          if (result && result.status === "success") {
+            const users = result.users || [];
+
+            // التحقق من وجود بيانات
+            if (users.length === 0) {
+              tbody.innerHTML =
+                '<tr><td colspan="3" class="text-center text-muted py-3">لا يوجد معلمون مسجلون حالياً</td></tr>';
+              return;
+            }
+
+            // رسم الجدول بالبيانات الحقيقية
+            tbody.innerHTML = users
+              .map((user) => {
+                // تحويل البيانات لنص JSON آمن للاستخدام في الـ HTML
+                const safeUserJson = JSON.stringify(user).replace(
+                  /"/g,
+                  "&quot;",
+                );
+
+                return `
+                <tr>
+                    <td class="small fw-bold p-2">
+                        ${user.name} <br> 
+                        <small class="text-muted">${user.stage || "بدون مرحلة"}</small>
+                    </td>
+                    <td class="small">
+                        <div class="d-flex flex-wrap gap-1">
+                            ${
+                              user.permissions
+                                ? user.permissions
+                                    .split(", ")
+                                    .map(
+                                      (p) => `
+                                <span class="badge rounded-pill bg-light text-success border-royal px-2 py-1" 
+                                      style="font-size: 0.75rem; border: 1px solid rgba(6, 78, 59, 0.2) !important;">
+                                    <i class="fas fa-check-circle me-1" style="font-size: 0.6rem;"></i>${p}
+                                </span>
+                            `,
+                                    )
+                                    .join("")
+                                : '<span class="text-muted small">لا توجد مجالات</span>'
+                            }
+                        </div>
+                    </td>
+                    <td class="text-center">
+                         <button onclick="openEditModal('${safeUserJson}')" class="btn btn-sm text-primary p-0 me-2" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                         </button>
+                         <button onclick="deleteUserAccount('${user.rowId}', this)" class="btn btn-sm text-danger p-0" title="حذف">
+                            <i class="fas fa-user-minus"></i>
+                         </button>
+                    </td>
+                </tr>`;
+              })
+              .join("");
+
+            console.log("✅ تم تحميل قائمة المستخدمين بنجاح.");
+          } else {
+            throw new Error(result.message || "فشل في جلب قائمة المستخدمين");
+          }
+        } catch (error) {
+          console.error("Users Load Error:", error);
+          if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger py-3">❌ فشل الاتصال: ${error.message}</td></tr>`;
+          }
+        }
+      }
+
+      function updateStats(dataToCalculate = rawData) {
+        // التحقق من وجود بيانات (سواء الكلية أو المفلترة)
+        if (!dataToCalculate || dataToCalculate.length === 0) {
+          document.getElementById("totalCount").innerText = "0";
+          document.getElementById("primaryCount").innerText = "0";
+          document.getElementById("middleCount").innerText = "0";
+          document.getElementById("topTeacher").innerText = "-";
+          document.getElementById("topTeacherCount").innerText = "0 شاهد";
+          document.getElementById("topArea").innerText = "-";
+          document.getElementById("topAreaCount").innerText = "0 شاهد";
+          updateDashboardChart(0, 0);
+          return;
+        }
+
+        // 1. تحديث الأرقام الأساسية بناءً على البيانات المرسلة
+        document.getElementById("totalCount").innerText =
+          dataToCalculate.length;
+        document.getElementById("primaryCount").innerText =
+          dataToCalculate.filter((d) => d.stage === "ابتدائي").length;
+        document.getElementById("middleCount").innerText =
+          dataToCalculate.filter((d) => d.stage === "متوسط").length;
+
+        // 2. حساب المعلم والمجال الأكثر تكراراً في المجموعة الحالية
+        const teacherCounts = {};
+        const areaCounts = {};
+
+        dataToCalculate.forEach((item) => {
+          if (item.userName)
+            teacherCounts[item.userName] =
+              (teacherCounts[item.userName] || 0) + 1;
+          if (item.area)
+            areaCounts[item.area] = (areaCounts[item.area] || 0) + 1;
+        });
+
+        // تحديد المعلم الأعلى (الأكثر نشاطاً في نتائج البحث الحالية)
+        const topTeacherName =
+          Object.keys(teacherCounts).length > 0
+            ? Object.keys(teacherCounts).reduce((a, b) =>
+                teacherCounts[a] > teacherCounts[b] ? a : b,
+              )
+            : "-";
+        const topTCount = teacherCounts[topTeacherName] || 0;
+
+        // تحديد المجال الأعلى (الأكثر تغطية في نتائج البحث الحالية)
+        const topAreaName =
+          Object.keys(areaCounts).length > 0
+            ? Object.keys(areaCounts).reduce((a, b) =>
+                areaCounts[a] > areaCounts[b] ? a : b,
+              )
+            : "-";
+        const topACount = areaCounts[topAreaName] || 0;
+
+        // 3. تحديث الواجهة
+        document.getElementById("topTeacher").innerText = topTeacherName;
+        document.getElementById("topTeacherCount").innerText =
+          topTCount + " شاهد";
+
+        document.getElementById("topArea").innerText = topAreaName;
+        document.getElementById("topAreaCount").innerText = topACount + " شاهد";
+        // إضافة هذا السطر في نهاية الدالة لربط الإحصائيات بالرسم البياني
+        const pCount = dataToCalculate.filter(
+          (d) => d.stage === "ابتدائي",
+        ).length;
+        const mCount = dataToCalculate.filter(
+          (d) => d.stage === "متوسط",
+        ).length;
+
+        // استدعاء دالة الرسم المحدثة
+        updateDashboardChart(pCount, mCount);
+      }
+
+      function applySmartFilter() {
+        const searchInput = document.getElementById("filterSearch");
+        const areaSelect = document.getElementById("filterArea");
+        const countElem = document.getElementById("searchCount");
+
+        if (!searchInput || !areaSelect) return;
+
+        // دالة داخلية لتنظيف النص العربي من الفروقات البسيطة
+        const normalizeArabic = (text) => {
+          return String(text || "")
+            .replace(/[أإآا]/g, "ا") // توحيد الألفات
+            .replace(/ة/g, "ه") // توحيد التاء المربوطة والهاء
+            .replace(/ى/g, "ي") // توحيد الياء
+            .toLowerCase()
+            .trim();
+        };
+
+        const searchTerm = normalizeArabic(searchInput.value); // تنظيف نص البحث
+        const selectedArea = areaSelect.value;
+
+        const filtered = rawData.filter((item) => {
+          // تنظيف نصوص البيانات للمقارنة العادلة
+          const userName = normalizeArabic(item.userName);
+          const code = normalizeArabic(item.code);
+          const area = normalizeArabic(item.area);
+          const indicator = normalizeArabic(item.indicator);
+          const stage = normalizeArabic(item.stage);
+
+          const combinedText = `${userName} ${code} ${area} ${indicator} ${stage}`;
+
+          const matchesSearch = combinedText.includes(searchTerm);
+          const matchesArea =
+            selectedArea === "all" || item.area === selectedArea;
+
+          return matchesSearch && matchesArea;
+        });
+
+        renderTable(filtered);
+        updateStats(filtered);
+
+        if (searchTerm !== "" || selectedArea !== "all") {
+          countElem.innerHTML = `تم العثور على <span class="text-success fw-bold">${filtered.length}</span> نتيجة.`;
+        } else {
+          countElem.innerHTML = "";
+        }
+      }
+
+      function populateAreaFilter(data) {
+        const areaSelect = document.getElementById("filterArea");
+        if (!areaSelect) return;
+
+        // استخراج المجالات الفريدة
+        const areas = [...new Set(data.map((item) => item.area))];
+
+        // الاحتفاظ بالخيار الأول "كل المجالات" وإضافة البقية
+        areaSelect.innerHTML = '<option value="all">كل المجالات</option>';
+        areas.forEach((area) => {
+          if (area) {
+            const option = document.createElement("option");
+            option.value = area;
+            option.textContent = area;
+            areaSelect.appendChild(option);
+          }
+        });
+      }
+
+      async function populateAllowedAreas() {
+        const select = document.getElementById("allowedAreas");
+        if (!select) return;
+
+        // إظهار حالة تحميل بسيطة داخل القائمة
+        select.innerHTML =
+          "<option disabled selected>جاري تحميل المجالات...</option>";
+
+        try {
+          // 1. طلب البيانات من الباك إند
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "getUniqueAreas" }),
+          });
+
+          const result = await response.json();
+
+          // 2. التحقق من نجاح الاستجابة واستخراج المصفوفة
+          if (result && result.status === "success") {
+            const areas = result.areas || [];
+
+            select.innerHTML = ""; // تفريغ القائمة من نص التحميل
+
+            if (areas.length > 0) {
+              areas.forEach((area) => {
+                let option = new Option(area, area);
+                select.add(option);
+              });
+              console.log("✅ تم تحميل المجالات من ورقة Standards بنجاح");
+            } else {
+              select.innerHTML =
+                "<option disabled>لا توجد مجالات متاحة</option>";
+            }
+          } else {
+            throw new Error(result.message || "فشل في جلب المجالات");
+          }
+        } catch (error) {
+          console.error("Fetch Error (Unique Areas):", error);
+          select.innerHTML =
+            "<option disabled>⚠️ خطأ في تحميل البيانات</option>";
+        }
+      }
+
+      // دالة مساعدة لفتح المودال (تأكد من وجودها أو عرفها كـ Alert مؤقتاً)
+
+      async function openEditModal(jsonString) {
+        try {
+          const user = JSON.parse(jsonString);
+
+          // 1. تعبئة الحقول الأساسية في نافذة التعديل
+          document.getElementById("editRowId").value = user.rowId;
+          document.getElementById("editName").value = user.name;
+          document.getElementById("editEmail").value = user.email;
+
+          if (user.stage)
+            document.getElementById("editStage").value = user.stage;
+          if (user.role) document.getElementById("editRole").value = user.role;
+
+          const permsArray = user.permissions
+            ? user.permissions.split(", ")
+            : [];
+          const areaSelect = document.getElementById("editAllowedAreas");
+          if (!areaSelect) return;
+
+          areaSelect.innerHTML = ""; // تفريغ القائمة
+
+          // 2. معالجة المجالات (الأولوية للبيانات المحلية ثم السيرفر)
+          let uniqueAreas = [];
+
+          if (window.standardsData && window.standardsData.length > 0) {
+            // استخدام البيانات المخزنة مسبقاً في الذاكرة
+            uniqueAreas = [
+              ...new Set(window.standardsData.map((item) => item.area)),
+            ].filter(Boolean);
+            console.log("استخدام بيانات المجالات من الذاكرة المحلية");
+          } else {
+            // حل احتياطي: طلب البيانات من السيرفر بأسلوب Fetch إذا لم تكن متوفرة
+            console.warn(
+              "البيانات المحلية غير متوفرة، جاري جلبها من السيرفر...",
+            );
+            const response = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "getUniqueAreas" }),
+            });
+            const result = await response.json();
+            if (result && result.status === "success") {
+              uniqueAreas = result.areas || [];
+            }
+          }
+
+          // 3. بناء خيارات القائمة (Select Options)
+          uniqueAreas.forEach((area) => {
+            let option = new Option(area, area);
+            if (permsArray.includes(area)) {
+              option.selected = true;
+            }
+            areaSelect.add(option);
+          });
+
+          // 4. إظهار نافذة المودال (Bootstrap)
+          const modalElem = document.getElementById("editUserModal");
+          if (modalElem) {
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modalElem);
+            bsModal.show();
+          }
+        } catch (e) {
+          console.error("خطأ في فتح نافذة التعديل:", e);
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+              text: "فشل في تحميل بيانات المعلم أو المجالات",
+              icon: "error",
+              confirmButtonColor: "#064e3b",
+              customClass: { popup: "royal-border" },
+            });
+          }
+        }
+      }
+
+      async function addNewUserAccount() {
+        // 1. قراءة القيم من الواجهة
+        const name = document.getElementById("newUserName").value.trim();
+        const email = document.getElementById("newUserEmail").value.trim();
+        const password = document.getElementById("newUserPassword").value;
+        const stage = document.getElementById("newUserStage").value;
+        const selectedRole = document.getElementById("newRole").value;
+        const areas = Array.from(
+          document.getElementById("allowedAreas").selectedOptions,
+        )
+          .map((o) => o.value)
+          .join(", ");
+
+        // 2. التحقق من الحقول الأساسية
+        if (!name || !email || !password) {
+          return Swal.fire({
+            title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+            text: "الرجاء إدخال اسم المعلم، بريده الإلكتروني، وكلمة المرور",
+            icon: "error",
+            confirmButtonText: "محاولة أخرى",
+            confirmButtonColor: "#064e3b",
+            customClass: { popup: "royal-border" },
+          });
+        }
+
+        if (!areas) {
+          return Swal.fire({
+            title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+            text: "الرجاء اختيار مجال واحد على الأقل للمعلم",
+            icon: "error",
+            confirmButtonText: "محاولة أخرى",
+            confirmButtonColor: "#064e3b",
+            customClass: { popup: "royal-border" },
+          });
+        }
+
+        // 3. تحضير الزر وتفعيل حالة التحميل
+        const addBtn = document.getElementById("addUserBtn");
+        const originalText = addBtn.innerText;
+        addBtn.disabled = true;
+        addBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
+
+        try {
+          // 4. تنفيذ طلب الـ Fetch للسيرفر
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "addNewUser",
+              data: {
+                name: name,
+                email: email,
+                password: password,
+                permissions: areas,
+                stage: stage,
+                role: selectedRole,
+              },
+            }),
+          });
+
+          const result = await response.json();
+
+          // 5. معالجة الرد القادم من الباك إند
+          if (result.status === "success") {
+            // حالة النجاح
+            Swal.fire({
+              title: '<span style="color:#064e3b">تمت العملية بنجاح</span>',
+              text: "✅ تم حفظ المعلم بنجاح في مرحلة " + stage,
+              icon: "success",
+              confirmButtonText: "موافق",
+              confirmButtonColor: "#064e3b",
+              customClass: { popup: "royal-border" },
+            });
+
+            // إعادة تعيين الحقول
+            document.getElementById("newUserName").value = "";
+            document.getElementById("newUserEmail").value = "";
+            document.getElementById("newUserPassword").value = "";
+
+            // تحديث قائمة المعلمين في الجدول
+            loadRegisteredUsers();
+          } else {
+            // حالة وجود خطأ منطقي (مثل بريد مسجل مسبقاً)
+            Swal.fire({
+              title: '<span style="color:#064e3b">تنبيه</span>',
+              text: result.message,
+              icon: "warning",
+              confirmButtonText: "موافق",
+              confirmButtonColor: "#064e3b",
+              customClass: { popup: "royal-border" },
+            });
+          }
+        } catch (error) {
+          // حالة خطأ في الاتصال بالسيرفر
+          console.error("Add User Error:", error);
+          Swal.fire({
+            title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+            text: "❌ فشل الاتصال بالسيرفر أثناء الحفظ",
+            icon: "error",
+            confirmButtonText: "محاولة أخرى",
+            confirmButtonColor: "#064e3b",
+            customClass: { popup: "royal-border" },
+          });
+        } finally {
+          // 6. إعادة الزر لحالته الطبيعية في كل الحالات
+          addBtn.disabled = false;
+          addBtn.innerText = originalText;
+        }
+      }
+      // --- 1. إصلاح دالة تحديث البيانات (حذف حرف r الزائد) ---
+      async function saveUserUpdate(btn) {
+        // 1. جلب القيم من عناصر النموذج (Modal)
+        const rowId = document.getElementById("editRowId").value;
+        const updatedName = document.getElementById("editName").value;
+        const updatedEmail = document.getElementById("editEmail").value.trim();
+        const updatedPassword = document.getElementById("editPassword").value;
+        const updatedStage = document.getElementById("editStage").value;
+        const updateRole = document.getElementById("editRole").value;
+        const selectedAreas = Array.from(
+          document.getElementById("editAllowedAreas").selectedOptions,
+        )
+          .map((opt) => opt.value)
+          .join(", ");
+
+        // 2. التحقق من الحقول الأساسية
+        if (!updatedName || !updatedEmail || !selectedAreas) {
+          Swal.fire({
+            title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+            text: "يرجى تعبئة كافة الحقول",
+            icon: "error",
+            confirmButtonColor: "#064e3b",
+            customClass: { popup: "royal-border" },
+          });
+          return;
+        }
+
+        // 3. تجهيز الزر وحالة التحميل
+        const saveBtn = btn;
+        const originalText = saveBtn.innerText;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
+
+        try {
+          // 4. إرسال الطلب عبر Fetch
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "updateUserInSheet",
+              rowId: rowId,
+              updatedData: {
+                name: updatedName,
+                email: updatedEmail,
+                password: updatedPassword,
+                stage: updatedStage,
+                role: updateRole,
+                permissions: selectedAreas,
+              },
+            }),
+          });
+
+          const result = await response.json();
+
+          // 5. معالجة الرد (Success / Fail)
+          if (result && result.status === "success") {
+            Swal.fire({
+              title: "تم التحديث بنجاح",
+              text: result.message,
+              icon: "success",
+              confirmButtonColor: "#064e3b",
+              customClass: { popup: "royal-border" },
+            });
+
+            // إغلاق النافذة المنبثقة
+            const modalElem = document.getElementById("editUserModal");
+            const bsModal = bootstrap.Modal.getInstance(modalElem);
+            if (bsModal) bsModal.hide();
+
+            // تحديث الجدول فوراً ليعكس البيانات الجديدة
+            loadRegisteredUsers();
+          } else {
+            // معالجة الخطأ المنطقي (مثل تكرار الإيميل)
+            throw new Error(
+              result.message || "حدث خطأ غير متوقع أثناء التحديث",
+            );
+          }
+        } catch (error) {
+          console.error("Update Error:", error);
+          Swal.fire({
+            title: "خطأ في التحديث",
+            text: error.message,
+            icon: "error",
+            confirmButtonColor: "#e74c3c",
+            customClass: { popup: "royal-border" },
+          });
+        } finally {
+          // 6. إعادة الزر لحالته الأصلية
+          saveBtn.disabled = false;
+          saveBtn.innerText = originalText;
+        }
+      }
+      // --- 2. إصلاح دالة الحذف (إغلاق الأقواس) ---
+      async function deleteUserAccount(rowId, btnElement) {
+        // 1. طلب التأكيد من المستخدم قبل الحذف
+        const confirmation = await Swal.fire({
+          title: "هل أنت متأكد؟",
+          text: "سيتم حذف حساب المعلم نهائياً من النظام!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#064e3b",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "نعم، احذف",
+          cancelButtonText: "إلغاء",
+          customClass: { popup: "royal-border" },
+        });
+
+        // 2. إذا وافق المستخدم، نبدأ عملية الحذف
+        if (confirmation.isConfirmed) {
+          // تعطيل الزر وإظهار مؤشر التحميل
+          const originalContent = btnElement.innerHTML;
+          btnElement.disabled = true;
+          btnElement.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span>';
+
+          try {
+            // 3. إرسال طلب الحذف عبر Fetch
+            const response = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "deleteUserByRowId",
+                rowId: rowId,
+              }),
+            });
+
+            const result = await response.json();
+
+            // 4. معالجة النتيجة القادمة من الباك إند
+            // ملاحظة: الباك إند لديك يعيد response(true) عند النجاح
+            if (result === true || result.status === "success") {
+              await Swal.fire({
+                title: "تم الحذف!",
+                text: "تمت إزالة سجل المعلم بنجاح.",
+                icon: "success",
+                confirmButtonColor: "#064e3b",
+              });
+
+              // تحديث الجدول فوراً ليعكس الحذف
+              loadRegisteredUsers();
+            } else {
+              throw new Error(result.message || "حدث خطأ أثناء محاولة الحذف");
+            }
+          } catch (error) {
+            console.error("Delete Error:", error);
+            Swal.fire({
+              title: "فشل الحذف",
+              text: error.message,
+              icon: "error",
+              confirmButtonColor: "#064e3b",
+            });
+
+            // إعادة الزر لحالته الأصلية في حال الفشل
+            btnElement.disabled = false;
+            btnElement.innerHTML = originalContent;
+          }
+        }
+      }
+      //حذف الشاهد
+      async function deleteEvidence(rowId, ownerName, btn) {
+        // 1. طلب التأكيد باستخدام SweetAlert2
+        const result = await Swal.fire({
+          title: "هل أنت متأكد؟",
+          text: `سيتم حذف شاهد: (${ownerName}) والملف المرتبط به نهائياً.`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "نعم، احذف الآن",
+          cancelButtonText: "تراجع",
+          reverseButtons: true,
+          customClass: { popup: "royal-border" },
+        });
+
+        if (result.isConfirmed) {
+          // 2. تجهيز الزر وحالة التحميل
+          const originalContent = btn.innerHTML;
+          btn.disabled = true;
+          btn.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span>';
+
+          try {
+            // 3. إرسال طلب الحذف للسيرفر
+            // ملاحظة: نرسل requestingUser للتأكد من الصلاحية كما يطلب الباك إند
+            const response = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "deleteRowData",
+                rowId: rowId,
+                requestingUser: ownerName, // نفترض أن ownerName هو المستخدم الحالي للمقارنة
+              }),
+            });
+
+            const res = await response.json();
+
+            // 4. معالجة الرد بناءً على الحالة (Success / Fail / Error)
+            if (res.status === "success") {
+              // تأثير التلاشي البصري للسطر
+              const row = btn.closest("tr");
+              if (row) row.classList.add("fade-out");
+
+              // الانتظار قليلاً لانتهاء الحركة ثم التحديث
+              setTimeout(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "تم الحذف بنجاح",
+                  text: res.message,
+                  confirmButtonColor: "#064e3b",
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+                loadManagerData(); // تحديث إحصائيات وجدول المدير
+              }, 500);
+            } else {
+              // في حال فشل الصلاحية أو وجود خطأ منطقي
+              throw new Error(res.message || "فشل الحذف من السيرفر");
+            }
+          } catch (error) {
+            console.error("Delete Evidence Error:", error);
+            Swal.fire({
+              title: "عذراً.. حدث خطأ",
+              text: error.message,
+              icon: "error",
+              confirmButtonColor: "#064e3b",
+            });
+
+            // إعادة الزر لحالته الأصلية عند الفشل
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+          }
+        }
+      }
+
+      function togglePasswordVisibility(btn, inputId) {
+        const passwordInput = document.getElementById(inputId);
+        // نبحث عن الأيقونة داخل الزر الذي تم الضغط عليه فقط
+        const toggleIcon = btn.querySelector("i");
+
+        if (!passwordInput || !toggleIcon) return;
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      }
+      // دالة تحميل المعايير بناءً على المجال المختار
+      function loadAgentStandards() {
+        const area = document.getElementById("a_area").value;
+        const stdSelect = document.getElementById("a_standard");
+        // نستخدم window.standardsData لضمان الوصول للبيانات المحملة
+        const data = window.standardsData || [];
+
+        stdSelect.innerHTML = '<option value="">اختر المعيار...</option>';
+        if (!area) return;
+
+        const filtered = [
+          ...new Set(
+            data.filter((s) => s.area === area).map((s) => s.standard),
+          ),
+        ];
+        filtered.forEach((std) => stdSelect.add(new Option(std, std)));
+        stdSelect.disabled = false;
+      }
+      // دالة تحميل المؤشرات بناءً على المعيار المختار
+      function loadAgentIndicators() {
+        const area = document.getElementById("a_area").value;
+        const standard = document.getElementById("a_standard").value;
+        const indSelect = document.getElementById("a_indicator");
+        // استخدام window لضمان الوصول للبيانات المحملة مسبقاً
+        const currentData = window.standardsData || [];
+
+        indSelect.innerHTML = '<option value="">اختر المؤشر...</option>';
+
+        if (!standard) {
+          indSelect.disabled = true;
+          return;
+        }
+
+        const filteredIndicators = standardsData.filter(
+          (s) => s.area === area && s.standard === standard,
+        );
+
+        filteredIndicators.forEach((ind) => {
+          // نضع نص المؤشر والرمز في الخيار
+          const option = new Option(ind.indicator, ind.code);
+          indSelect.add(option);
+        });
+        indSelect.disabled = false;
+      }
+      // عرض رمز المؤشر المختار
+      function displayIndicatorDetails() {
+        const indSelect = document.getElementById("a_indicator");
+        document.getElementById("a_codeDisplay").innerText =
+          indSelect.value || "-";
+      }
+      //upload
+      document
+        .getElementById("agentQuickUpload")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const fileInput = document.getElementById("a_file");
+          const btn = document.getElementById("a_uploadBtn");
+          const msgDiv = document.getElementById("a_msg");
+          // قراءة المرحلة المختارة
+          const selctedStage = document.getElementById("sStage").value;
+
+          if (fileInput.files.length === 0) {
+            // alert("يرجى اختيار ملف أولاً");
+            Swal.fire({
+              title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+              text: "يرجى اختيار ملف أولاً",
+              icon: "error",
+              iconColor: "#e74c3c", // لون أحمر للخطأ يتناسق مع التصميم
+              confirmButtonText: "محاولة أخرى",
+              confirmButtonColor: "#064e3b",
+              background: "#ffffff",
+              customClass: {
+                popup: "royal-border",
+              },
+            });
+            return;
+          }
+
+          // جلب بيانات المستخدم الحالي ()
+          const userData =
+            window.userDataForForm ||
+            (window.parent && window.parent.userDataForForm);
+          const file = fileInput.files[0];
+          // مصفوفة الأنواع المسموحة: الصور، PDF، ملفات وورد، وملفات إكسل
+          const allowedTypes = [
+            // الصور و PDF
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            // Word & Excel
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            // الفيديو (صيغ الفيديو الشائعة)
+            "video/mp4",
+            "video/webm",
+            "video/quicktime", // quicktime هو صيغة MOV
+          ];
+
+          if (!allowedTypes.includes(file.type)) {
+            showErrorAlert(
+              "عذراً، يسمح فقط برفع (الصور، PDF، المستندات، أو مقاطع الفيديو القصيرة)",
+            );
+            return;
+          }
+
+          // 1. فحص الحجم (مثلاً بحد أقصى 15 ميجابايت)
+          const maxSizeInMB = 15;
+          if (file.size > maxSizeInMB * 1024 * 1024) {
+            Swal.fire({
+              icon: "warning",
+              title: "الملف كبير جداً",
+              text: `يرجى اختيار ملف أصغر من ${maxSizeInMB} ميجابايت`,
+              confirmButtonColor: "#064e3b",
+            });
+            btn.disabled = false;
+            btn.innerHTML = "بدء رفع الشاهد للمؤشر المختار";
+            return;
+          }
+
+          const reader = new FileReader();
+
+          btn.disabled = true;
+          btn.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span> جاري الرفع...';
+
+          reader.onload = async function (event) {
+            // 1. تجهيز الكائن obj ليتوافق تماماً مع توقعات الباك إند
+           // const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
+            const userName = savedUser ? savedUser.name : "وكيل غير معروف";
+            const obj = {
+              file: event.target.result.split(",")[1], // استخراج الجزء المشفر Base64 فقط
+              mimeType: file.type,
+              fileName: file.name,
+              userName: userName,
+              stage: selctedStage,
+              area: document.getElementById("a_area").value,
+              standard: document.getElementById("a_standard").value,
+              code: document.getElementById("a_codeDisplay").innerText,
+              indicator:
+                document.getElementById("a_indicator").options[
+                  document.getElementById("a_indicator").selectedIndex
+                ].text,
+            };
+
+            try {
+              // 2. تحديث حالة الزر (Loading)
+              btn.disabled = true;
+              btn.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span> جاري الرفع والتدقيق...';
+              msgDiv.innerHTML = ""; // مسح أي رسائل سابقة
+
+              // 3. إرسال الطلب عبر Fetch
+              const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                  action: "uploadEvidence",
+                  obj: obj, // نرسله داخل مفتاح obj كما يتوقع الباك إند (request.obj)
+                }),
+              });
+
+              const res = await response.json();
+
+              // 4. معالجة الرد (Success / Error)
+              if (res.status === "success") {
+                // حالة النجاح
+                msgDiv.innerHTML = `<div class="alert alert-success mt-2 royal-border">
+                <i class="fas fa-check-circle me-2"></i>${res.message}
+            </div>`;
+
+                // إعادة ضبط النموذج
+                document.getElementById("agentQuickUpload").reset();
+                document.getElementById("a_codeDisplay").innerText = "-";
+
+                // تحديث البيانات في اللوحة (إحصائيات، مساحة، جداول)
+                if (typeof loadManagerData === "function") loadManagerData();
+                if (typeof updateStorageUI === "function") updateStorageUI();
+
+                // تنبيه نجاح إضافي (اختياري)
+                Swal.fire({
+                  icon: "success",
+                  title: "تم الرفع!",
+                  text: res.message,
+                  timer: 3000,
+                  confirmButtonColor: "#064e3b",
+                });
+              } else {
+                // حالة وجود خطأ منطقي من السيرفر
+                throw new Error(res.message || "حدث خطأ غير معروف أثناء الرفع");
+              }
+            } catch (error) {
+              // حالة خطأ في الاتصال أو السيرفر
+              console.error("Upload Error:", error);
+              msgDiv.innerHTML = `<div class="alert alert-danger mt-2 royal-border">
+            <i class="fas fa-exclamation-triangle me-2"></i> ${error.message}
+        </div>`;
+
+              Swal.fire({
+                icon: "error",
+                title: "فشل الرفع",
+                text: error.message,
+                confirmButtonColor: "#d33",
+              });
+            } finally {
+              // 5. إعادة الزر لحالته الطبيعية
+              btn.disabled = false;
+              btn.innerHTML = "بدء رفع الشاهد للمؤشر المختار";
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      /**
+       * دالة لجلب معايير ومجالات الشواهد وتعبئة قوائم الاختيار
+       */
+      async function loadStandardsAndAreas() {
+        console.log("⏳ جاري جلب المجالات والمعايير بأسلوب Fetch...");
+
+        try {
+          // 1. إرسال الطلب إلى الباك إند
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "getStandardsData" }),
+          });
+
+          // 2. تحويل الاستجابة إلى JSON
+          const result = await response.json();
+
+          // 3. التحقق من حالة الاستجابة واستخراج المصفوفة (نستخدم result.results هنا)
+          if (result && result.status === "success") {
+            const data = result.results || []; // تأكد من مطابقة المسمى في الباك إند
+
+            if (data.length === 0) {
+              console.warn("⚠️ لم يتم العثور على بيانات في المعايير.");
+              return;
+            }
+
+            // تخزين البيانات عالمياً
+            window.standardsData = data;
+
+            // 4. استخراج أسماء المجالات الفريدة
+            const uniqueAreas = [
+              ...new Set(data.map((item) => item.area)),
+            ].filter(Boolean);
+
+            // 5. تحديث قوائم الاختيار (Select Inputs)
+            const areaIds = ["a_area", "allowedAreas", "editAllowedAreas"];
+
+            areaIds.forEach((id) => {
+              const select = document.getElementById(id);
+              if (select) {
+                // مسح الخيارات القديمة
+                select.innerHTML = "";
+
+                // إضافة خيار افتراضي للقائمة الرئيسية
+                if (id === "a_area") {
+                  const defaultOpt = new Option("اختر المجال...", "");
+                  select.add(defaultOpt);
+                }
+
+                // إضافة المجالات المستخرجة
+                uniqueAreas.forEach((areaName) => {
+                  select.add(new Option(areaName, areaName));
+                });
+              }
+            });
+
+            console.log("✅ تم تحميل " + uniqueAreas.length + " مجال بنجاح.");
+          } else {
+            throw new Error(result.message || "فشل في استلام بيانات المعايير");
+          }
+        } catch (error) {
+          console.error("❌ فشل تحميل المعايير:", error);
+        }
+      }
+      function exportToExcel() {
+        // جلب البيانات المعروضة حالياً في الجدول فقط
+        const table = document.getElementById("managerTableBody");
+        const rows = Array.from(table.rows);
+
+        // تجهيز البيانات بتنسيق مصفوفة
+        const data = rows.map((row) => ({
+          المرحلة: row.cells[0].innerText,
+          المجال: row.cells[1].innerText,
+          المؤشر: row.cells[2].innerText,
+          بواسطة: row.cells[3].innerText,
+          التاريخ: row.cells[4].innerText,
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "الشواهد");
+
+        // تحميل الملف باسم يحتوي على التاريخ الحالي
+        const fileName = `تقرير_الشواهد_${new Date().toLocaleDateString("ar-SA")}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+      }
+
+      function exportToPDF() {
+        const table = document.getElementById("managerTableBody").parentElement;
+        if (!table) return;
+
+        const tempDiv = document.createElement("div");
+        tempDiv.style.padding = "15px";
+        tempDiv.style.direction = "rtl";
+
+        // إضافة ترويسة التقرير
+        const headerHtml = `
+        <div style="text-align:center; margin-bottom:15px; font-family: Arial, sans-serif;">
+            <h2 style="color:#064e3b; margin:0; font-size: 22px;">تقرير الشواهد المدرسية  </h2>
+            <p style="color:#859147; font-weight:bold; margin:5px 0;">مجمع الإمام يعقوب البصري وأبو عمرو البصري</p>
+            <div style="border-bottom: 2px solid #d4af37; width: 50%; margin: 10px auto;"></div>
+        </div>`;
+
+        const tableClone = table.cloneNode(true);
+        tableClone.style.width = "100%";
+        tableClone.style.fontSize = "12px";
+
+        // إزالة عمود الإجراءات نهائياً
+        const rows = tableClone.querySelectorAll("tr");
+        rows.forEach((row) => {
+          if (row.lastElementChild) row.lastElementChild.remove();
+        });
+
+        tempDiv.innerHTML = headerHtml;
+        tempDiv.appendChild(tableClone);
+        document.body.appendChild(tempDiv);
+
+        const opt = {
+          margin: [15, 10, 20, 10],
+          filename: "تقرير_الشواهد_المدرسية.pdf",
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+          },
+          jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+        };
+
+        html2pdf()
+          .set(opt)
+          .from(tempDiv)
+          .toPdf()
+          .get("pdf")
+          .then(function (pdf) {
+            const totalPages = pdf.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+              pdf.setPage(i);
+              pdf.setFontSize(10);
+              pdf.setTextColor(150);
+
+              // الترقيم في المنتصف بالأسفل
+              const pageText = "Page " + i + " of " + totalPages;
+              pdf.text(
+                pageText,
+                pdf.internal.pageSize.getWidth() / 2,
+                pdf.internal.pageSize.getHeight() - 10,
+                { align: "center" },
+              );
+
+              // التاريخ في جهة اليسار
+              const dateStr = new Date().toLocaleDateString("en-GB");
+              pdf.setFontSize(8);
+              pdf.text(
+                "Exported: " + dateStr,
+                15,
+                pdf.internal.pageSize.getHeight() - 10,
+              );
+            }
+          })
+          .save()
+          .then(() => {
+            document.body.removeChild(tempDiv);
+          });
+      }
+
+      async function updateStorageUI() {
+        console.log("📊 جاري فحص مساحة التخزين...");
+
+        try {
+          // 1. إرسال الطلب عبر fetch
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "getStorageUsage" }),
+          });
+
+          const storage = await response.json();
+
+          // 2. التحقق من نجاح الاستجابة
+          if (storage && storage.status === "success") {
+            const bar = document.getElementById("storageBar");
+            const text = document.getElementById("storageText");
+            const percentText = document.getElementById("storagePercent");
+
+            if (!bar || !text || !percentText) return;
+
+            const realPercent = parseFloat(storage.percent);
+
+            // 3. تحديث النصوص والواجهة
+            text.innerText = `${storage.usedDisplay} من أصل ${storage.limit} GB`;
+
+            let displayLabel =
+              realPercent > 0 && realPercent < 1
+                ? realPercent.toFixed(2) + "%"
+                : Math.round(realPercent) + "%";
+
+            percentText.innerText = displayLabel + " مستخدم";
+
+            // ضبط العرض المرئي (بحد أدنى 1.5% ليظهر الشريط حتى لو المساحة صغيرة جداً)
+            const visualWidth =
+              realPercent > 0 && realPercent < 1.5 ? 1.5 : realPercent;
+            bar.style.width = visualWidth + "%";
+
+            // 4. نظام التنبيه الذكي والألوان
+            if (realPercent >= 90) {
+              // تغيير لون الشريط للأحمر عند اقتراب الامتلاء
+              bar.classList.remove("bg-success", "bg-info");
+              bar.classList.add("bg-danger");
+
+              // إظهار التنبيه المنبثق باستخدام SweetAlert2
+              if (typeof Swal !== "undefined") {
+                Swal.fire({
+                  title: "تنبيه: مساحة التخزين ممتلئة تقريباً!",
+                  html: `لقد استهلكت <b>${displayLabel}</b> من المساحة المتاحة.<br>يرجى تنظيف الملفات القديمة لتجنب توقف رفع الشواهد الجديدة.`,
+                  icon: "warning",
+                  confirmButtonText: "حسناً، سأقوم بالمراجعة",
+                  confirmButtonColor: "#d33",
+                  backdrop: `rgba(255, 0, 0, 0.2)`,
+                });
+              }
+            } else if (realPercent >= 70) {
+              // لون برتقالي (تحذير متوسط)
+              bar.classList.remove("bg-success");
+              bar.classList.add("bg-warning");
+            } else {
+              // لون أخضر (مساحة آمنة)
+              bar.classList.remove("bg-danger", "bg-warning");
+              bar.classList.add("bg-success");
+            }
+
+            console.log(`✅ تم تحديث مساحة التخزين: ${displayLabel}`);
+          } else {
+            throw new Error(storage.message || "فشل في جلب بيانات التخزين");
+          }
+        } catch (error) {
+          console.error("Storage UI Error:", error);
+          // لا نفضل إظهار alert مزعج هنا للحفاظ على هدوء الواجهة
+        }
+      }
+      async function deleteAllEvidences() {
+        // 1. التنبيه الأول: التحذير العام
+        const firstAttempt = await Swal.fire({
+          title: "⚠️ تحذير شديد!",
+          text: "أنت على وشك حذف جميع الشواهد نهائياً. سيتم إنشاء نسخة احتياطية تلقائية قبل الحذف.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "نعم، أريد الحذف",
+          cancelButtonText: "إلغاء",
+          reverseButtons: true,
+          customClass: { popup: "royal-border" },
+        });
+
+        if (!firstAttempt.isConfirmed) return;
+
+        // 2. التنبيه الثاني: التأكيد بكلمة "حذف"
+        const secondAttempt = await Swal.fire({
+          title: "تأكيد أخير",
+          text: 'اكتب كلمة "حذف" للمتابعة:',
+          input: "text",
+          inputAttributes: { autocapitalize: "off" },
+          showCancelButton: true,
+          confirmButtonText: "تأكيد الحذف الشامل",
+          cancelButtonText: "تراجع",
+          confirmButtonColor: "#d33",
+          preConfirm: (value) => {
+            if (value !== "حذف") {
+              Swal.showValidationMessage("عذراً، الكلمة غير صحيحة");
+              return false;
+            }
+            return true;
+          },
+        });
+
+        if (secondAttempt.isConfirmed) {
+          // 3. إظهار مؤشر التحميل المستمر (Loading)
+          Swal.fire({
+            title: "جاري الأرشفة والحذف...",
+            html: "يرجى الانتظار، يتم الآن إنشاء نسخة احتياطية وتفريغ السجل الرئيسي",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+
+          try {
+            // 4. إرسال طلب الحذف للسيرفر عبر Fetch
+            const response = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "deleteAllEvidencesFromSheet" }),
+            });
+
+            const result = await response.json();
+
+            // 5. معالجة النتيجة
+            if (result && result.status === "success") {
+              await Swal.fire({
+                title: "تمت العملية بنجاح!",
+                text: result.message,
+                icon: "success",
+                confirmButtonColor: "#064e3b",
+                customClass: { popup: "royal-border" },
+              });
+
+              // تحديث البيانات في اللوحة فوراً
+              loadManagerData();
+              updateStorageUI(); // تحديث شريط المساحة أيضاً
+            } else {
+              throw new Error(
+                result.message || "حدث خطأ غير متوقع أثناء الحذف",
+              );
+            }
+          } catch (error) {
+            console.error("Master Delete Error:", error);
+            Swal.fire({
+              title: "فشل الحذف",
+              text: error.message,
+              icon: "error",
+              confirmButtonColor: "#d33",
+            });
+          }
+        }
+      }
+
+      let myChart; // متغير عالمي لحفظ الرسم البياني
+
+      function updateDashboardChart(primary, middle) {
+        const ctx = document.getElementById("evidencesChart").getContext("2d");
+        if (myChart) {
+          myChart.destroy();
+        }
+
+        myChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["الابتدائي", "المتوسط"],
+            datasets: [
+              {
+                data: [primary, middle],
+                backgroundColor: ["#198754", "#ffc107"],
+                borderRadius: 8,
+                barThickness: 20,
+              },
+            ],
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              // إظهار الرقم عند التمرير (Tooltip) بشكل منسق
+              tooltip: {
+                rtl: true,
+                titleFont: { family: "Arial" },
+                bodyFont: { family: "Arial" },
+              },
+            },
+            scales: {
+              x: {
+                display: false,
+                // زيادة الحد الأقصى قليلاً لترك مساحة للأرقام إذا أردت إظهارها كنص
+                suggestedMax: Math.max(primary, middle) * 1.2,
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  font: { family: "Arial", size: 12, weight: "bold" },
+                  color: "#444",
+                },
+              },
+            },
+            // رسم الأرقام يدوياً بجانب الأعمدة (اختياري وبسيط)
+            animation: {
+              onComplete: function () {
+                const chartInstance = this;
+                const ctx = chartInstance.ctx;
+                ctx.font = Chart.helpers.fontString(12, "bold", "Arial");
+                ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#000";
+
+                chartInstance.data.datasets.forEach(function (dataset, i) {
+                  const meta = chartInstance.getDatasetMeta(i);
+                  meta.data.forEach(function (bar, index) {
+                    const data = dataset.data[index];
+                    // وضع الرقم بجانب نهاية العمود
+                    ctx.fillText(data, bar.x + 20, bar.y);
+                  });
+                });
+              },
+            },
+          },
+        });
+      }
+      function logout() {
+        // 1. طلب تأكيد الخروج لمنع الخروج عن طريق الخطأ
+        Swal.fire({
+          title: "تسجيل الخروج",
+          text: "هل أنت متأكد من رغبتك في مغادرة النظام؟",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#064e3b", // اللون الملكي الخاص بك
+          cancelButtonColor: "#d33",
+          confirmButtonText: "نعم، تسجيل خروج",
+          cancelButtonText: "إلغاء",
+          customClass: {
+            popup: "royal-border", // إذا كنت تستخدم كلاسات مخصصة للتصميم الملكي
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // 2. مسح كافة البيانات المخزنة في المتصفح
+            localStorage.clear(); // يمسح loggedUser وأي بيانات أخرى
+            sessionStorage.clear(); // للأمان الإضافي
+
+            // 3. مسح متغيرات الـ window إذا كانت موجودة
+            window.userDataForForm = null;
+
+            // 4. إظهار رسالة وداع سريعة
+            Swal.fire({
+              title: "تم تسجيل الخروج",
+              text: "نشكرك على مجهوداتك، ننتظر عودتك قريباً.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            }).then(() => {
+              // 5. التوجيه لصفحة تسجيل الدخول
+              // ملاحظة: تأكد من تسمية الصفحة بشكل صحيح (index.html أو login.html)
+              window.location.href = "index.html";
+            });
+          }
+        });
+      }
+     
+      // تشغيل التحميل فوراً عند قراءة المتصفح للسكربت
+     
+      initLoad();
+      // استدعِ الدالة عند تشغيل الصفحة
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>

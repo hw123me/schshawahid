@@ -1,0 +1,587 @@
+  
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #1abc9c;
+      --bg-light: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--bg-light);
+      color: #333;
+    }
+
+    /* شريط التنقل العلوي */
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff !important;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 15px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.85rem;
+    }
+
+    /* الحاوية الرئيسية */
+    .main-card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      margin-top: -30px;
+      background: #fff;
+      padding: 2rem;
+    }
+
+    /* تحسين الأزرار */
+    .btn-primary {
+      background-color: var(--accent-color);
+      border: none;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #16a085;
+      transform: translateY(-2px);
+    }
+
+    /* تأثيرات التحميل */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .spinner-grow {
+      color: var(--accent-color);
+    }
+
+    /* تذييل الصفحة */
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      color: #95a5a6;
+      font-size: 0.8rem;
+      padding-bottom: 20px;
+    }
+
+    .custom-navbar {
+    /* تدرج لوني احترافي */
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    padding: 0.8rem 0;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-brand .icon-box {
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .user-info-pill {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 15px;
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+  }
+
+  .btn-logout {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #ff9999;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 8px;
+    padding: 5px 12px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-logout:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+  }
+  .royal-navbar {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    padding: 0.7rem 0;
+    border-bottom: 2px solid #d4af37; /* خط ذهبي سفلي */
+  }
+
+  /* صندوق الأيقونة بلمسة ذهبية */
+  .royal-icon-box {
+    background: #d4af37; /* لون ذهبي */
+    color: #064e3b; /* أيقونة خضراء داخل الصندوق الذهبي */
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  /* نصوص العنوان */
+  .title-main {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+  }
+  .title-sub {
+    font-size: 0.7rem;
+    color: #d4af37; /* نص ذهبي صغير */
+    text-transform: uppercase;
+  }
+
+  /* كبسولة بيانات المستخدم */
+  .user-pill-royal {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3); /* إطار ذهبي شفاف */
+    color: #ffffff;
+  }
+  
+  .gold-text {
+    color: #d4af37;
+  }
+
+  /* زر الخروج الملكي */
+  .btn-royal-logout {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-royal-logout:hover {
+    background: #d4af37;
+    color: #064e3b;
+    border-color: #d4af37;
+    font-weight: bold;
+    transform: scale(1.05);
+  }
+  .royal-footer {
+    background: #043927; /* أخضر أغمق من الهيدر ليعطي ثباتاً */
+    color: #ffffff;
+    border-top: 3px solid #d4af37; /* الخط الذهبي الفاصل */
+    font-size: 0.9rem;
+  }
+
+  .copyright-text {
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+  }
+
+  /* صندوق فريق العمل */
+  .credits-box {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .credit-item {
+    display: inline-block;
+  }
+
+  .credit-item strong {
+    color: #d4af37; /* الأسماء تظهر باللون الذهبي */
+    font-weight: 600;
+  }
+
+  .credit-divider {
+    margin: 0 10px;
+    color: rgba(212, 175, 55, 0.4);
+  }
+
+  .gold-text {
+    color: #d4af37;
+  }
+
+  /* تأكد من بقاء الفوتر في أسفل الصفحة */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  main { /* أو الـ div الرئيسي للمحتوى */
+    flex: 1;
+  }
+  .text-royal-gold {
+    color: #d4af37 !important;
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+
+  /* بديل text-primary للنصوص العادية التي تريد تمييزها (أخضر) */
+  .text-royal-green {
+    color: #064e3b !important;
+    font-weight: 600;
+  }
+  .btn-royal-save {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+    color: #d4af37 !important; /* نص ذهبي */
+    border: 1px solid #d4af37 !important;
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .btn-royal-save:hover {
+    background: #065f46 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(6, 78, 59, 0.3);
+    color: #ffffff !important; /* يتحول للأبيض عند الحوم */
+  }
+   /* تنسيق شريط التمرير */
+  .table-responsive::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .table-responsive::-webkit-scrollbar-thumb {
+    background-color: #adb5bd;
+    border-radius: 10px;
+  }
+
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* الهيدر الملكي المثبت */
+  .royal-table-head th {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+    color: #d4af37 !important;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #d4af37 !important;
+    padding: 15px !important;
+    white-space: nowrap;
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: rgba(6, 78, 59, 0.05);
+  }
+
+  .sticky-top {
+    top: 0;
+    z-index: 1020;
+  }
+
+  /* الأزرار والتنسيقات الخاصة */
+  .btn-royal-view {
+    background-color: #d4af37 !important;
+    color: #064e3b !important;
+    border: 1px solid #b8860b !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-royal-view:hover {
+    background-color: #064e3b !important;
+    color: #d4af37 !important;
+    transform: translateY(-2px);
+  }
+
+  .btn-glass-view {
+    padding: 5px 15px;
+    background: rgba(6, 78, 59, 0.1);
+    color: #064e3b;
+    border: 1px solid rgba(6, 78, 59, 0.2);
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: 0.3s;
+  }
+
+  .btn-glass-view:hover {
+    background: #064e3b;
+    color: #fff;
+  }
+
+  .nav-pills .nav-link.active {
+    background-color: #064e3b !important;
+    color: #d4af37 !important;
+  }
+
+  .border-royal {
+    border: 1px solid rgba(6, 78, 59, 0.2);
+  }
+
+  .royal-tabs {
+    background: rgba(6, 78, 59, 0.05);
+    padding: 8px;
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  /* النمط العام للأزرار */
+  .royal-tabs .nav-link {
+    color: #064e3b !important;
+    font-weight: 600;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+  }
+
+  /* عند تمرير الماوس */
+  .royal-tabs .nav-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    color: #064e3b !important;
+  }
+
+  /* التبويب النشط (Active) */
+  .royal-tabs .nav-link.active {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+    color: #d4af37 !important;
+    /* نص ذهبي للتبويب النشط */
+    box-shadow: 0 4px 15px rgba(6, 78, 59, 0.2);
+    border: 1px solid #d4af37 !important;
+    transform: translateY(-2px);
+  }
+
+  /* أيقونات التبويبات */
+  .royal-tabs .nav-link i {
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+
+  /* الخلفية الملكية المتدرجة */
+  .royal-card-bg {
+    background: linear-gradient(135deg, #a5b066 0%, #859147 50%, #97ad05 100%) !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* إضافة تأثير "الوهج" الخفيف على البطاقة */
+  .royal-card-bg::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* الإطار الذهبي الرفيع */
+  .border-gold {
+    border: 1.5px solid #d4af37 !important;
+    box-shadow: 0 10px 20px rgba(6, 78, 59, 0.2) !important;
+  }
+
+  /* لون النص الذهبي */
+  .text-gold {
+    color: #d4af37 !important;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* تأثير عند التمرير فوق البطاقة */
+  .royal-card-bg:hover {
+    transform: translateY(-5px);
+    transition: all 0.4s ease;
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.15) !important;
+  }
+
+  .btn-delete-royal {
+    background: rgba(220, 53, 69, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-delete-royal:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+  }
+
+  .text-gold {
+    color: #d4af37 !important;
+  }
+
+  .text-royal-gold {
+    color: #064e3b !important;
+  }
+
+  .border-royal {
+    border: 1px solid rgba(6, 78, 59, 0.2) !important;
+    border-radius: 10px !important;
+  }
+
+  /* تأثير التوهج الذهبي عند الكتابة */
+  .form-control:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3) !important;
+  }
+
+  .btn-outline-gold {
+    border: 1px solid rgba(6, 78, 59, 0.2);
+    color: #d4af37;
+    border-right: none;
+    border-radius: 0 10px 10px 0 !important;
+    /* للحفاظ على انحناء الحواف */
+  }
+
+  /* لضمان تناسق اتجاه الحقول في اللغة العربية */
+  .input-group>.form-control {
+    border-radius: 10px 0 0 10px !important;
+  }
+
+  .btn-royal-save {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%) !important;
+    color: #d4af37 !important;
+    /* نص ذهبي */
+    border: 1px solid #d4af37 !important;
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-royal-save:hover {
+    background: #065f46 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(6, 78, 59, 0.3);
+    color: #ffffff !important;
+    /* يتحول للأبيض عند الحوم */
+  }
+
+  /* الزر الثانوي (إلغاء / مسح) - ذهبي ملكي */
+  .btn-royal-cancel {
+    background: transparent !important;
+    color: #064e3b !important;
+    border: 1px solid #064e3b !important;
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-royal-cancel:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+    border-color: #d4af37 !important;
+    color: #d4af37 !important;
+  }
+
+  /* أضف هذا في قسم <style> */
+  .loading-row {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .loading-row td {
+    height: 50px;
+    background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+    background-size: 200% 100%;
+    animation: royal-loading 1.5s infinite;
+    border-radius: 8px;
+    border: none;
+  }
+
+  @keyframes royal-loading {
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .sticky-top {
+    top: 0;
+    z-index: 1020;
+    /* هذا ممتاز ليبقى الهيدر فوق الجدول */
+  }
+
+  .animate-pulse {
+    animation: pulse-red 2s infinite;
+  }
+
+  @keyframes pulse-red {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+    }
+
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+    }
+  }
+
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.bg-light-gold { background-color: rgba(212, 175, 55, 0.15); }
+.bg-light-green { background-color: rgba(25, 135, 84, 0.15); }
+.border-royal { border: 1px solid #d4af37 !important; }
+
+.fade-out {
+    opacity: 0;
+    transform: translateX(20px); /* حركة انزياح بسيطة لليمين */
+    transition: all 0.5s ease;
+}
+  
