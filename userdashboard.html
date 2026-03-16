@@ -1,0 +1,666 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إدارة الشواهد المدرسية</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://lh3.googleusercontent.com/u/0/d/1MHJi0LeO90YSWA5ZPZ0dca5Tiw1WCcAw"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow mb-4 royal-navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <div class="royal-icon-box me-2">
+            <i class="fas fa-award"></i>
+          </div>
+          <div class="brand-text">
+            <span class="d-block fw-bold mb-0 title-main"
+              >إدارة الشواهد المدرسية</span
+            >
+            <small class="title-sub"
+              >مجمع الإمام يعقوب البصري وأبو عمرو البصري
+            </small>
+          </div>
+        </a>
+
+        <div class="d-flex align-items-center">
+          <div
+            class="user-pill-royal d-none d-md-flex align-items-center me-3"
+            id="userInfo"
+          >
+            <i class="fas fa-user-shield gold-text"></i>
+            <span class="ms-2 small">جاري التحقق...</span>
+          </div>
+
+          <button onclick="logout()" class="btn btn-royal-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="d-none d-sm-inline ms-1">تسجيل الخروج</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+<main class="flex-grow-content">
+    <div class="container-fluid py-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div id="uploadFormContainer" class="p-2">
+            <h4 class="text-secondary mb-4">رفع شاهد جديد</h4>
+
+            <form id="evidenceForm">
+              <input type="hidden" id="userName" name="userName" />
+              <input type="hidden" id="stage" name="stage" />
+
+              <div class="mb-3">
+                <label class="form-label">المجال</label>
+                <select
+                  class="form-select"
+                  id="area"
+                  name="area"
+                  onchange="updateStandards()"
+                  required
+                >
+                  <option value="">اختر المجال...</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">المعيار</label>
+                <select
+                  class="form-select"
+                  id="standard"
+                  name="standard"
+                  onchange="updateIndicators()"
+                  required
+                  disabled
+                >
+                  <option value="">اختر المعيار...</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">المؤشر</label>
+                <select
+                  class="form-select"
+                  id="indicatorSelect"
+                  name="indicator"
+                  onchange="displayFinalDetails()"
+                  required
+                  disabled
+                >
+                  <option value="">اختر المؤشر...</option>
+                </select>
+              </div>
+
+              <div class="card bg-light mb-3">
+                <div class="card-body py-2">
+                  <p class="mb-0 small">
+                    <strong>الرمز المرجعي:</strong>
+                    <span id="displayCode" class="badge bg-secondary ms-2"
+                      >-</span
+                    >
+                  </p>
+                  <input type="hidden" id="code" name="code" />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">اختر الملف (PDF, صور, إلخ)</label>
+                <input
+                  class="form-control"
+                  type="file"
+                  id="fileInput"
+                  name="file"
+                  accept=".pdf, .jpg, .jpeg, .png, .doc, .docx, .xls, .xlsx, .mp4, .mov, .webm"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn btn-royal-save" id="submitBtn">
+                رفع الشاهد الآن
+              </button>
+            </form>
+            <hr class="my-4" />
+            <h5 class="text-secondary mb-3">
+              <i class="fas fa-list me-2"></i>شواهدي المرفوعة
+              <span
+                id="evidenceCount"
+                class="badge rounded-pill btn-royal-view"
+                style="font-size: 0.7rem"
+                >0</span
+              >
+            </h5>
+
+            <div
+              class="evidence-scroll-area"
+              style="
+                max-height: 350px;
+                overflow-y: auto;
+                border: 1px solid #eee;
+                border-radius: 8px;
+              "
+            >
+              <div class="table-responsive">
+                <table
+                  class="table table-hover table-sm mb-0"
+                  style="font-size: 0.85rem"
+                >
+                  <thead>
+                    <tr>
+                      <th>المجال/المعيار</th>
+                      <th>المؤشر</th>
+                      <th class="text-center">الملف</th>
+                      <th class="text-center">الإجراء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="userEvidencesBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="statusMessage" class="mt-3 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+       <footer class="royal-footer mt-5 py-4">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+            <p class="mb-0 copyright-text">
+              <i class="far fa-copyright me-1"></i> 2026 جميع الحقوق محفوظة
+            </p>
+          </div>
+
+          <div class="col-md-6 text-center text-md-end">
+            <div class="credits-box">
+              <span class="credit-item">
+                <i class="fas fa-lightbulb gold-text me-1"></i> فكرة:
+                <strong>خالد المالكي</strong>
+              </span>
+              <span class="credit-divider">|</span>
+              <span class="credit-item">
+                <i class="fas fa-code gold-text me-1"></i> تطوير:
+                <strong>عبدالرزاق المعلوي</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7DC8xWvRnkc8E_200SUw_2C_c-2lovZ7CKNiWq5kB408PLPmLlJQu9RqybuYYbvz9/exec";
+let allStandardsData = [];
+
+// 1. جلب بيانات المستخدم مرة واحدة بشكل صحيح عند فتح الصفحة
+var userData = JSON.parse(localStorage.getItem("loggedUser"));
+const currentUser = userData ? userData.name : ""; // تعريف المستخدم الحالي عالمياً
+
+// تحديث واجهة المستخدم العلوية فوراً
+if (userData) {
+    const infoDiv = document.getElementById("userInfo");
+    if (infoDiv) {
+        infoDiv.innerHTML = `
+            <i class="fas fa-user-circle me-1"></i> ${userData.name} 
+            <span class="badge bg-light text-dark ms-2">${userData.stage}</span>
+            <span class="badge bg-info ms-1">${userData.role}</span>
+        `;
+    }
+}
+
+// 2. مراقب تحميل البيانات (الذي يقوم بملء القوائم والجدول)
+window.addEventListener('load', function() {
+    let attempts = 0;
+    const checkData = setInterval(async function() {
+        attempts++;
+        
+        // نستخدم userData الذي عرفناه في الأعلى
+        if (userData && userData.name) {
+            clearInterval(checkData);
+            console.log("✅ تم العثور على بيانات المستخدم:", userData.name);
+
+            // ملء الحقول المخفية
+            if (document.getElementById('userName')) document.getElementById('userName').value = userData.name;
+            if (document.getElementById('stage')) document.getElementById('stage').value = userData.stage;
+
+            try {
+                // جلب المعايير
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "getStandardsData" })
+                });
+                const res = await response.json();
+
+                if (res.status === "success") {
+                    allStandardsData = res.results; // تخزين البيانات
+                    
+                    // استدعاء دالة ملء المجالات
+                    populateAreas(userData); 
+                    
+                    // تحميل جدول الشواهد
+                    loadUserEvidences();
+                }
+            } catch (error) {
+                console.error("Fetch Error:", error);
+            }
+        }
+
+        if (attempts > 20) {
+            clearInterval(checkData);
+            Swal.fire({ icon: 'error', title: 'خطأ في الدخول', text: 'يرجى إعادة تسجيل الدخول' });
+        }
+    }, 500);
+});
+
+// 3. دالة تصفية المجالات (المعدلة لتعمل مع الصلاحيات بدقة)
+function populateAreas(userData) {
+   const areaSelect = document.getElementById('area');
+    if (!areaSelect || !allStandardsData.length) return;
+
+    areaSelect.innerHTML = '<option value="">اختر المجال...</option>';
+    
+    const allUniqueAreas = [...new Set(allStandardsData.map(item => item.area.toString().trim()))];
+    let permissions = [];
+    if (userData.permissions) {
+      // تنظيف النص من المسافات والفواصل المختلفة
+      permissions = userData.permissions.split(/[,،]/).map(p => p.trim()).filter(p => p !== "");
+    }
+
+    allUniqueAreas.forEach(area => {
+      // إذا لم تكن هناك صلاحيات محددة (تعني الوصول للكل) أو كان المجال ضمن المسموح
+      if (permissions.length === 0 || permissions.includes(area)) {
+        areaSelect.add(new Option(area, area));
+      }
+    });
+    
+    
+}
+  // 3. معالجة إرسال النموذج (الرفع)
+document.getElementById('evidenceForm').onsubmit = async function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('submitBtn');
+    const fileInput = document.getElementById('fileInput');
+    const form = this;
+
+    // 1. فحص وجود الملف والتحقق من النوع والحجم
+    if (!fileInput.files.length) {
+        showErrorAlert("يرجى اختيار ملف أولاً");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const allowedTypes = [
+        'application/pdf', 'image/jpeg', 'image/png', 'image/jpg',
+        'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'video/mp4', 'video/webm', 'video/quicktime'
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        showErrorAlert("عذراً، يسمح فقط برفع (الصور، PDF، المستندات، أو مقاطع الفيديو القصيرة)");
+        return;
+    }
+
+    const maxSizeInMB = 15;
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+        showErrorAlert(`حجم الملف كبير جداً! الحد الأقصى المسموح به هو ${maxSizeInMB} ميجابايت.`);
+        return;
+    }
+
+    // 2. بدء عملية الرفع (تغيير حالة الزر)
+    btn.disabled = true;
+    const originalBtnText = "رفع شاهد جديد";
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> جاري الرفع...';
+
+    // 3. قراءة الملف وتحويله إلى Base64
+    const reader = new FileReader();
+    
+    reader.onload = async function(event) {
+        try {
+            // جلب بيانات المستخدم من النطاق العالمي
+           // const userData = window.userDataForForm || (window.parent && window.parent.userDataForForm) || {};
+            
+            const obj = {
+                userName: userData.name || document.getElementById('userName').value,
+                stage: userData.stage || document.getElementById('stage').value,
+                area: document.getElementById('area').value,
+                standard: document.getElementById('standard').value,
+                code: document.getElementById('code').value,
+                indicator: document.getElementById('indicatorSelect').value,
+                fileName: file.name,
+                file: event.target.result.split(',')[1], // بيانات Base64 فقط
+                mimeType: file.type
+            };
+
+            // 4. إرسال الطلب عبر fetch
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "uploadEvidence",
+                    obj: obj // يطابق request.obj في الباك إند
+                })
+            });
+
+            const res = await response.json();
+
+            // 5. معالجة الرد
+            btn.disabled = false;
+            btn.innerText = originalBtnText;
+
+            if (res.status === "success") {
+                Swal.fire({
+                    title: '<span style="color:#064e3b">تم الرفع بنجاح</span>',
+                    text: res.message,
+                    icon: 'success',
+                    confirmButtonColor: '#064e3b',
+                    customClass: { popup: 'royal-border' }
+                });
+
+                // تصفير النموذج وإعادة الحقول لحالتها
+                form.reset();
+                if (typeof resetIndicator === "function") resetIndicator();
+                
+                document.getElementById('standard').disabled = true;
+                document.getElementById('indicatorSelect').disabled = true;
+
+                // تحديث جدول الشواهد فوراً
+                if (typeof loadUserEvidences === "function") {
+                    loadUserEvidences();
+                }
+
+            } else {
+                throw new Error(res.message || "حدث خطأ غير معروف أثناء الرفع");
+            }
+
+        } catch (error) {
+            console.error("Upload Error:", error);
+            btn.disabled = false;
+            btn.innerText = originalBtnText;
+            showErrorAlert("فشل الاتصال بالسيرفر: " + error.message);
+        }
+    };
+
+    reader.onerror = function() {
+        btn.disabled = false;
+        btn.innerText = originalBtnText;
+        showErrorAlert("حدث خطأ أثناء قراءة الملف من جهازك");
+    };
+
+    reader.readAsDataURL(file);
+};
+// دالة مساعدة موحدة لرسائل الخطأ
+function showErrorAlert(message) {
+    Swal.fire({
+        title: '<span style="color:#064e3b">عذراً.. حدث خطأ</span>',
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'موافق',
+        confirmButtonColor: '#064e3b',
+        customClass: { popup: 'royal-border' }
+    });
+}
+
+  // 4. جلب شواهد المستخدم (تم تصحيح القوس المفقود هنا)
+async function loadUserEvidences() {
+    // 1. تحديد المستخدم الحالي (من الذاكرة أو الحقل المخفي)
+  //  const currentUser = (window.userDataForForm && window.userDataForForm.name) 
+           //             ? window.userDataForForm.name.trim() 
+             //           : document.getElementById('userName').value.trim();
+                        
+    const tbody = document.getElementById('userEvidencesBody');
+    if (!tbody) return;
+
+    // 2. إظهار حالة التحميل
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3"><div class="spinner-border spinner-border-sm text-royal-gold"></div> جاري تحديث قائمة شواهدك...</td></tr>';
+
+    try {
+        // 3. إرسال الطلب عبر fetch
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "getEvidencesData"
+            })
+        });
+
+        const res = await response.json();
+
+        // 4. التحقق من نجاح العملية
+        if (res.status === "success") {
+            const allData = res.data || [];
+            tbody.innerHTML = '';
+
+            if (allData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">لا توجد بيانات متاحة في السجل</td></tr>';
+                return;
+            }
+
+            // 5. تصفية الشواهد الخاصة بالمعلم الحالي فقط
+            const userFiles = allData.filter(item => item.userName.trim() === currentUser);
+            
+            // تحديث عداد الشواهد في الواجهة
+            const countElem = document.getElementById('evidenceCount');
+            if (countElem) countElem.innerText = userFiles.length;
+
+            if (userFiles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">لم ترفع أي شواهد بعد باسمك</td></tr>';
+                return;
+            }
+
+            // 6. بناء أسطر الجدول
+            const rowsHtml = userFiles.map(item => `
+                <tr>
+                    <td>
+                        <div class="fw-bold" style="font-size:0.8rem;">${item.area}</div>
+                        <div class="small text-muted" style="font-size:0.7rem;">${item.standard}</div>
+                    </td>
+                    <td class="small" style="font-size:0.75rem; width: 40%;">
+                        <div class="fw-bold" style="font-size:0.8rem;">${item.code}</div>
+                        <div class="indicator-text text-secondary" title="${item.indicator}" style="font-size:0.7rem; line-height:1.2;">
+                            ${item.indicator}
+                        </div>
+                    </td>
+                    <td class="text-center align-middle">
+                        <a href="${item.fileUrl}" target="_blank" class="btn btn-sm btn-royal-view" title="عرض الملف">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                    <td class="text-center align-middle">
+                        <button onclick="deleteEvidence('${item.rowId}', this)" class="btn btn-sm btn-link text-danger p-0" title="حذف الشاهد">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = rowsHtml;
+
+        } else {
+            throw new Error(res.message || "فشل جلب البيانات من السيرفر");
+        }
+
+    } catch (error) {
+        console.error("Load Evidences Error:", error);
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-3">❌ خطأ: ${error.message}</td></tr>`;
+    }
+}
+  // الدوال المساعدة لتحديث القوائم المنسدلة
+function updateStandards() {
+    const area = document.getElementById('area').value;
+    const stdSelect = document.getElementById('standard');
+    stdSelect.innerHTML = '<option value="">اختر المعيار...</option>';
+    stdSelect.disabled = !area;
+    
+    if (area) {
+      const filtered = allStandardsData.filter(i => i.area.trim() === area.trim());
+      const uniqueStandards = [...new Set(filtered.map(i => i.standard))];
+      uniqueStandards.forEach(std => stdSelect.add(new Option(std, std)));
+    }
+  }
+
+  function updateIndicators() {
+    const std = document.getElementById('standard').value;
+    const indSelect = document.getElementById('indicatorSelect');
+    indSelect.innerHTML = '<option value="">اختر المؤشر...</option>';
+    indSelect.disabled = !std;
+
+    if (std) {
+      const indicators = allStandardsData.filter(i => i.standard === std);
+      indicators.forEach(item => indSelect.add(new Option(item.indicator, item.indicator)));
+    }
+  }
+
+  function displayFinalDetails() {
+    const ind = document.getElementById('indicatorSelect').value;
+    const std = document.getElementById('standard').value;
+    const item = allStandardsData.find(i => i.standard === std && i.indicator === ind);
+    if (item) {
+      document.getElementById('displayCode').innerText = item.code;
+      document.getElementById('code').value = item.code;
+    }
+  }
+
+  function resetIndicator() {
+    document.getElementById('displayCode').innerText = '-';
+    document.getElementById('code').value = '';
+  }
+
+window.deleteEvidence = function(rowId, btn) {
+    Swal.fire({
+        title: '<span style="color:#064e3b">هل أنت متأكد؟</span>',
+        text: "سيتم حذف الشاهد نهائياً من سجلاتك ومن Google Drive!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c',
+        cancelButtonColor: '#064e3b',
+        confirmButtonText: 'نعم، احذف',
+        cancelButtonText: 'إلغاء',
+        background: '#ffffff',
+        customClass: { popup: 'royal-border' }
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            
+            // 1. تحديد المستخدم الحالي (لأغراض التحقق في الباك إند)
+           // const currentUser = (window.userDataForForm && window.userDataForForm.name) 
+                           //     ? window.userDataForForm.name.trim() 
+                           //     : document.getElementById('userName').value.trim();
+
+            // 2. حالة التحميل على الزر
+            const originalHTML = btn.innerHTML;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+            }
+
+            try {
+                // 3. إرسال طلب الحذف عبر fetch
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        action: "deleteRowData",
+                        rowId: rowId,
+                        requestingUser: currentUser // يطابق المتغير في الباك إند
+                    })
+                });
+
+                const res = await response.json();
+
+                // 4. معالجة الرد
+                if (res.status === "success") {
+                    Swal.fire({
+                        title: 'تم الحذف!',
+                        text: res.message,
+                        icon: 'success',
+                        confirmButtonColor: '#064e3b'
+                    });
+                    
+                    // تحديث جدول المعلم فوراً
+                    if (typeof loadUserEvidences === "function") {
+                        loadUserEvidences();
+                    }
+                } else {
+                    // في حال رفض السيرفر الحذف (مثلاً ليس صاحب الملف)
+                    throw new Error(res.message || "تعذر الحذف");
+                }
+
+            } catch (error) {
+                console.error("Delete Error:", error);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+                Swal.fire({
+                    title: 'خطأ!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#064e3b'
+                });
+            }
+        }
+    });
+};
+
+function logout() {
+        // 1. طلب تأكيد الخروج لمنع الخروج عن طريق الخطأ
+        Swal.fire({
+          title: "تسجيل الخروج",
+          text: "هل أنت متأكد من رغبتك في مغادرة النظام؟",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#064e3b", // اللون الملكي الخاص بك
+          cancelButtonColor: "#d33",
+          confirmButtonText: "نعم، تسجيل خروج",
+          cancelButtonText: "إلغاء",
+          customClass: {
+            popup: "royal-border", // إذا كنت تستخدم كلاسات مخصصة للتصميم الملكي
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // 2. مسح كافة البيانات المخزنة في المتصفح
+            localStorage.clear(); // يمسح loggedUser وأي بيانات أخرى
+            sessionStorage.clear(); // للأمان الإضافي
+
+            // 3. مسح متغيرات الـ window إذا كانت موجودة
+            window.userDataForForm = null;
+
+            // 4. إظهار رسالة وداع سريعة
+            Swal.fire({
+              title: "تم تسجيل الخروج",
+              text: "نشكرك على مجهوداتك، ننتظر عودتك قريباً.",
+              icon: "success",
+              timer: 1500,
+              showConfirmButton: false,
+            }).then(() => {
+              // 5. التوجيه لصفحة تسجيل الدخول
+              // ملاحظة: تأكد من تسمية الصفحة بشكل صحيح (index.html أو login.html)
+              window.location.href = "index.html";
+            });
+          }
+        });
+      }
+     
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>

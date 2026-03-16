@@ -76,9 +76,10 @@ async function login() {
                     name: result.fullname,
                     role: result.role,
                     stage: result.stage,
+                    permissions: result.permissions,
                     email: email
                 }));
-                window.location.href = (result.role.trim() === "مدير") ? "admin.html" : "agentdashboard.html";
+                window.location.href = (result.role.trim() === "مدير") ? "admin.html" : result.role.trim() === "وكيل" ? "agentdashboard.html" : "userdashboard.html";
             } else {
                 Swal.fire('فشل الدخول', 'البريد أو كلمة المرور غير صحيحة', 'error');
             }
